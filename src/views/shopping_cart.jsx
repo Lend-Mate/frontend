@@ -249,7 +249,7 @@ export default function ShoppingCart() {
   return (
     <div className="cart-page">
 
-            <header className="header">
+      <header className="header">
         <div className="header-inner">
           <a href="/" className="logo">
             <span className="logo-icon">+</span>lendmate
