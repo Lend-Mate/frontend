@@ -17,5 +17,5 @@ ReactDOM.createRoot(root).render(
       <Route path="/favorites" element={<Favorites />} />
       <Route path="/shopping-cart" element={<ShoppingCart />} />
     </Routes>
-  </BrowserRouter>,
+  </BrowserRouter>
 );
