@@ -141,6 +141,16 @@ const initialSelectedDurations = products.reduce((acc, product) => {
   return acc
 }, {})
 
+
+function Toast({ msg }) {
+  if (!msg) return null;
+  return (
+    <div style={{ position: "fixed", bottom: 24, left: "50%", transform: "translateX(-50%)", background: "#111", color: "#fff", padding: "12px 24px", borderRadius: 50, fontSize: 13, fontWeight: 600, zIndex: 99, display: "flex", alignItems: "center", gap: 8 }}>
+      <span style={{ color: "#4CAF50" }}>✓</span> {msg}
+    </div>
+  );
+}
+
 function App() {
   const [wishlist, setWishlist] = useState(new Set())
   const [selectedDurations, setSelectedDurations] = useState(initialSelectedDurations)
@@ -164,7 +174,7 @@ function App() {
       document.removeEventListener('click', handleDocumentClick)
     }
   }, [])
-
+  console.log({toastMessage})
   useEffect(() => {
     if (!toastMessage) return undefined
     const timeout = window.setTimeout(() => setToastMessage(''), 2500)
@@ -272,8 +282,8 @@ function App() {
     <>
       <header className="header">
         <div className="header-inner">
-          <a href="#" className="logo">
-            <span className="logo-icon">+</span>kiralabunu
+          <a href="/" className="logo">
+            <span className="logo-icon">+</span>lendmate
           </a>
           <div className="search-bar">
             <i className="fas fa-search" />
@@ -283,11 +293,15 @@ function App() {
             <button type="button" className="icon-btn">
               <i className="fas fa-user" />
             </button>
-            <button type="button" className="icon-btn wishlist-btn">
+            <button type="button" className="icon-btn wishlist-btn" onClick={() => {
+              window.location.href = '/favorites'
+            }}>
               <i className="fas fa-heart" />
               <span className="badge">{wishlist.size}</span>
             </button>
-            <button type="button" className="icon-btn cart-btn">
+            <button type="button" className="icon-btn cart-btn" onClick={() => {
+              window.location.href = '/shopping-cart'
+            }}>
               <i className="fas fa-shopping-cart" />
               <span className="badge">{cartCount}</span>
             </button>
@@ -295,74 +309,71 @@ function App() {
         </div>
       </header>
 
-      <nav className="main-nav">
+      <nav className="main-nav" style={{fontFamily: "'Outfit', sans-serif"}}>
         <div className="nav-inner">
-          <button
-            type="button"
-            className="all-cats-btn"
-            onClick={event => {
-              event.stopPropagation()
-              setIsCatsDropdownOpen(prev => !prev)
-            }}
-          >
-            <i className="fas fa-th-large" /> TÜM KATEGORİLER
-          </button>
-          <a href="#">Telefon &amp; Aksesuarları</a>
-          <a href="#">Bilgisayar &amp; Tablet</a>
-          <a href="#">Ev &amp; Ofis</a>
-          <a href="#">Oyun Konsolu &amp; VR</a>
-          <a href="#" className="apple-link">
-            Apple 3for1
-          </a>
-          <span className="nav-sep">|</span>
-          <a href="#">İndirimli Ürünler</a>
-          <a href="#">Kampanyalar</a>
-          <a href="#">Nasıl Çalışır?</a>
-          <a href="#" className="kurumsal-link">
-            Kurumsal
-          </a>
+          <div>
+            <button
+              type="button"
+              className="all-cats-btn"
+              onClick={event => {
+                event.stopPropagation()
+                setIsCatsDropdownOpen(prev => !prev)
+              }}
+            >
+              <i className="fas fa-th-large" /> TÜM KATEGORİLER
+            </button>
+          </div>
+          <div>
+            <a href="/products?category=telefon-aksesuarlari">Telefon &amp; Aksesuarları</a>
+            <a href="/products?category=bilgisayar-tablet">Bilgisayar &amp; Tablet</a>
+            <a href="/products?category=ev-ofis">Ev &amp; Ofis</a>
+            <a href="/products?category=oyun-konsolu-vr">Oyun Konsolu &amp; VR</a>
+            <span className="nav-sep">|</span>
+            <a href="/products?category=indirimli-urunler">İndirimli Ürünler</a>
+            <a href="/how-it-works">Nasıl Çalışır?</a>
+          </div>
         </div>
       </nav>
 
       <div className={`cats-dropdown ${isCatsDropdownOpen ? 'open' : ''}`} ref={dropdownRef}>
         <div className="cats-grid">
-          <a href="#">
+          <a href="/products" className="all-cats-link">
             <i className="fas fa-th" /> Tüm Ürünler
           </a>
-          <a href="#">
+          <a href="/products?category=telefon-aksesuarlari">
             <i className="fas fa-mobile-alt" /> Telefon &amp; Aksesuarları
           </a>
-          <a href="#">
+          <a href="/products?category=bilgisayar-tablet">
             <i className="fas fa-laptop" /> Bilgisayar &amp; Tablet
           </a>
-          <a href="#">
+          <a href="/products?category=sağlık-spors">
             <i className="fas fa-dumbbell" /> Sağlık &amp; Spor
           </a>
-          <a href="#">
+          <a href="/products?category=akıllı-ev-ofis">
             <i className="fas fa-home" /> Akıllı Ev &amp; Ofis
           </a>
-          <a href="#">
+          <a href="/products?category=kiralamobil">
             <i className="fas fa-car" /> Kiralamobil
           </a>
-          <a href="#">
+          <a href="/products?category=ses-müzik">
             <i className="fas fa-headphones" /> Ses &amp; Müzik
           </a>
-          <a href="#">
+          <a href="/products?category=kameralar">
             <i className="fas fa-camera" /> Kameralar
           </a>
-          <a href="#">
+          <a href="/products?category=saat">
             <i className="fas fa-clock" /> Saat
           </a>
-          <a href="#">
+          <a href="/products?category=oyun-konsolu-vr">
             <i className="fas fa-gamepad" /> Oyun Konsolu &amp; VR
           </a>
-          <a href="#">
+          <a href="/products?category=anne-bebek">
             <i className="fas fa-baby" /> Anne &amp; Bebek
           </a>
-          <a href="#">
+          <a href="/products?category=motosiklet">
             <i className="fas fa-motorcycle" /> Motosiklet
           </a>
-          <a href="#">
+          <a href="/products?category=kişisel-bakım">
             <i className="fas fa-spa" /> Kişisel Bakım
           </a>
         </div>
@@ -381,27 +392,57 @@ function App() {
           </div>
         </div>
         <div className="category-slider" ref={catSliderRef}>
-          <div className="cat-card">
+          <div className="cat-card" onClick={() => {
+            window.location.href = '/products?category=telefon-aksesuarlari'
+          }}>
             <img src="https://images.unsplash.com/photo-1601784551446-20c9e07cdbdb?w=200&auto=format" alt="Telefon" />
             <p>Telefon</p>
           </div>
-          <div className="cat-card">
+          <div className="cat-card" onClick={() => {
+            window.location.href = '/products?category=bilgisayar-tablet'
+          }}>
             <img src="https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=200&auto=format" alt="Bilgisayar & Tablet" />
             <p>Bilgisayar &amp; Tablet</p>
           </div>
-          <div className="cat-card">
+          <div className="cat-card" onClick={() => {
+            window.location.href = '/products?category=kameralar'
+          }}>
             <img src="https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=200&auto=format" alt="Kameralar" />
             <p>Kameralar</p>
           </div>
-          <div className="cat-card">
+          <div className="cat-card" onClick={() => {
+            window.location.href = '/products?category=oyun-konsolu-vr'
+          }}>
             <img src="https://images.unsplash.com/photo-1580234811497-9df7fd2f357e?w=200&auto=format" alt="Oyun Konsolu & VR" />
             <p>Oyun Konsolu &amp; VR</p>
           </div>
-          <div className="cat-card">
+          <div className="cat-card" onClick={() => {
+            window.location.href = '/products?category=ses-müzik'
+          }}>
             <img src="https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?w=200&auto=format" alt="Ses & Müzik" />
             <p>Ses &amp; Müzik</p>
           </div>
-          <div className="cat-card">
+          <div className="cat-card" onClick={() => {
+            window.location.href = '/products?category=saat'
+          }}>
+            <img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=200&auto=format" alt="Saat" />
+            <p>Saat</p>
+          </div>
+          <div className="cat-card" onClick={() => {
+            window.location.href = '/products?category=saat'
+          }}>
+            <img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=200&auto=format" alt="Saat" />
+            <p>Saat</p>
+          </div>
+          <div className="cat-card" onClick={() => {
+            window.location.href = '/products?category=saat'
+          }}>
+            <img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=200&auto=format" alt="Saat" />
+            <p>Saat</p>
+          </div>
+          <div className="cat-card" onClick={() => {
+            window.location.href = '/products?category=saat'
+          }}>
             <img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=200&auto=format" alt="Saat" />
             <p>Saat</p>
           </div>
@@ -474,7 +515,7 @@ function App() {
         <div className="footer-inner">
           <div className="footer-brand">
             <div className="logo">
-              <span className="logo-icon">+</span>kiralabunu
+              <span className="logo-icon">+</span>lendmate
             </div>
             <p>
               Türkiye'nin en büyük ürün kiralama platformu. Teknoloji, mobilya,
@@ -523,7 +564,7 @@ function App() {
           </div>
         </div>
         <div className="footer-bottom">
-          <p>© 2025 Kiralabunu. Tüm hakları saklıdır.</p>
+          <p>© 2025 Lendmate. Tüm hakları saklıdır.</p>
         </div>
       </footer>
 
@@ -583,11 +624,7 @@ function App() {
         </div>
       )}
 
-      {toastMessage && (
-        <div className="toast">
-          <i className="fas fa-check-circle" style={{ color: '#4CAF50' }} /> {toastMessage}
-        </div>
-      )}
+      <Toast msg={toastMessage} />
     </>
   )
 }

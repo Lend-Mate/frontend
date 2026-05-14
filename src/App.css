@@ -45,7 +45,7 @@ img { max-width: 100%; display: block; }
 }
 
 .header-inner {
-  max-width: 1280px;
+  --max-width: 1100px;
   margin: 0 auto;
   padding: 0 24px;
   display: flex;
@@ -144,11 +144,12 @@ img { max-width: 100%; display: block; }
 }
 
 .nav-inner {
-  max-width: 1280px;
+  --max-width: 1100px;
   margin: 0 auto;
   padding: 0 24px;
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: 0;
   overflow-x: auto;
   scrollbar-width: none;
@@ -196,7 +197,7 @@ img { max-width: 100%; display: block; }
    ============================ */
 .cats-dropdown {
   display: none;
-  position: absolute;
+  position: relative;
   top: 100%;
   left: 0;
   width: 100%;
@@ -210,8 +211,8 @@ img { max-width: 100%; display: block; }
 .cats-dropdown.open { display: block; }
 
 .cats-grid {
-  max-width: 1280px;
-  margin: 0 auto;
+  max-width: 1100px;
+  --margin: 0 auto;
   padding: 24px;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -261,7 +262,7 @@ img { max-width: 100%; display: block; }
 }
 
 .hero-content {
-  max-width: 1280px;
+  max-width: 1100px;
   margin: 0 auto;
   padding: 0 24px;
   flex: 1;
@@ -319,9 +320,9 @@ img { max-width: 100%; display: block; }
    SECTIONS
    ============================ */
 .section {
-  max-width: 1280px;
+  max-width: 1100px;
   margin: 0 auto;
-  padding: 48px 24px;
+  padding: 24px 24px;
 }
 
 .section-gray {
@@ -331,14 +332,14 @@ img { max-width: 100%; display: block; }
 }
 
 .section-gray > * {
-  max-width: 1280px;
+  max-width: 1100px;
   margin: 0 auto;
   padding: 0 24px;
 }
 
 .section-gray .section-header,
 .section-gray .products-grid {
-  max-width: 1280px;
+  max-width: 1100px;
   margin: 0 auto;
   padding-left: 24px;
   padding-right: 24px;
@@ -392,6 +393,7 @@ img { max-width: 100%; display: block; }
   overflow-x: auto;
   scrollbar-width: none;
   padding-bottom: 8px;
+  padding-top: 8px;
   scroll-behavior: smooth;
 }
 .category-slider::-webkit-scrollbar { display: none; }
@@ -399,8 +401,8 @@ img { max-width: 100%; display: block; }
 .cat-card {
   flex-shrink: 0;
   width: 180px;
-  background: var(--gray-light);
-  border-radius: var(--radius);
+  background: #ececec;
+  border-radius: 4px;
   padding: 24px 16px 16px;
   text-align: center;
   cursor: pointer;
@@ -576,7 +578,7 @@ img { max-width: 100%; display: block; }
 }
 
 .how-steps {
-  max-width: 1000px;
+  max-width: 1100px;
   margin: 0 auto;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -619,7 +621,7 @@ img { max-width: 100%; display: block; }
 }
 
 .footer-inner {
-  max-width: 1280px;
+  max-width: 1100px;
   margin: 0 auto;
   display: grid;
   grid-template-columns: 2fr 1fr 1fr 1fr;
@@ -675,7 +677,7 @@ img { max-width: 100%; display: block; }
 .footer-col a:hover { color: var(--green); }
 
 .footer-bottom {
-  max-width: 1280px;
+  max-width: 1100px;
   margin: 0 auto;
   border-top: 1px solid rgba(255,255,255,0.08);
   padding: 20px 0;
@@ -874,13 +876,13 @@ img { max-width: 100%; display: block; }
 }
 
 .section-gray .section-header {
-  max-width: 1280px;
+  max-width: 1100px;
   margin: 0 auto 24px;
   padding: 0 24px;
 }
 
 .section-gray .products-grid {
-  max-width: 1280px;
+  max-width: 1100px;
   margin: 0 auto;
   padding: 0 24px;
 }
