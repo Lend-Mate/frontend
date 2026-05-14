@@ -49,10 +49,6 @@ jobs:
           name: react-app-build
           path: dist/
 
-      - name: Copy Docker deployment files
-        run: |
-          cp Dockerfile docker-compose-prod.yml nginx.conf .
-
       - name: Setup SSH
         env:
           SSH_PRIVATE_KEY: ${{ secrets.SERVER_SSH_KEY }}
