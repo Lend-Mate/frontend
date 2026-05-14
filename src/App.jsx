@@ -227,6 +227,7 @@ function App() {
     ))
 
   const ProductCard = ({ product }) => {
+
     const selectedDuration = selectedDurations[product.id] || product.defaultDuration
     const price = product.prices[selectedDuration]
     const isWished = wishlist.has(product.id)
