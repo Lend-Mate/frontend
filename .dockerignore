@@ -1,0 +1,11 @@
+node_modules
+.git
+.github
+.idea
+src
+public
+package.json
+package-lock.json
+README.md
+vite.config.js
+eslint.config.js
