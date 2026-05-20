@@ -371,6 +371,11 @@ export default function Favorites() {
             <i className="fas fa-search" />
             <input type="text" placeholder="Marka, ürün veya kategori ara" />
           </div>
+          <button type="button" className="create-listing-btn" onClick={() => {
+            window.location.href = '/advert'
+          }}>
+            <i className="fas fa-plus" /> Ücretsiz İlan Oluştur
+          </button>
           <div className="header-actions">
             <button type="button" className="icon-btn">
               <i className="fas fa-user" />

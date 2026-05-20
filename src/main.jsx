@@ -5,6 +5,7 @@ import App from './App.jsx'
 import Products from './views/products.jsx'
 import Favorites from './views/favorites.jsx'
 import ShoppingCart from './views/shopping_cart.jsx'
+import Advert from "./views/advert.jsx";
 
 
 const root = document.getElementById("root");
@@ -16,6 +17,7 @@ ReactDOM.createRoot(root).render(
       <Route path="/products" element={<Products />} />
       <Route path="/favorites" element={<Favorites />} />
       <Route path="/shopping-cart" element={<ShoppingCart />} />
+      <Route path="/advert" element={<Advert />} />
     </Routes>
   </BrowserRouter>
 );
