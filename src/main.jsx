@@ -6,6 +6,7 @@ import Products from './views/products.jsx'
 import Favorites from './views/favorites.jsx'
 import ShoppingCart from './views/shopping_cart.jsx'
 import Advert from "./views/advert.jsx";
+import Auth from "./views/auth.jsx";
 
 
 const root = document.getElementById("root");
@@ -18,6 +19,7 @@ ReactDOM.createRoot(root).render(
       <Route path="/favorites" element={<Favorites />} />
       <Route path="/shopping-cart" element={<ShoppingCart />} />
       <Route path="/advert" element={<Advert />} />
+      <Route path="/auth" element={<Auth />} />
     </Routes>
   </BrowserRouter>
 );
