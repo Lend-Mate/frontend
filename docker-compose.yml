@@ -4,6 +4,7 @@ networks:
 
 services:
   frontend:
+    image: "frontend"
     build: .
     container_name: frontend
     expose:
