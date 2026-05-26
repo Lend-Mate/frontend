@@ -1,3 +1,7 @@
+networks:
+  lendmate-net:
+    external: true
+
 services:
   frontend:
     build: .
@@ -5,3 +9,5 @@ services:
     expose:
       - "80"
     restart: unless-stopped
+    networks:
+      - lendmate-net
