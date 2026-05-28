@@ -1,27 +1,35 @@
-import api from "./api";
+import productApi from "./api";
 
-const ENDPOINT = "/products";
-
-export const createProduct = async (productData) => {
-  const response = await api.post(ENDPOINT, productData);
+export const getAllProducts = async () => {
+  const response = await productApi.get("/products");
   return response.data;
 };
 
 export const getProductById = async (id) => {
-  const response = await api.get(`${ENDPOINT}/${id}`);
+  const response = await productApi.get(`/products/${id}`);
   return response.data;
 };
 
-export const getAllProducts = async () => {
-  const response = await api.get(ENDPOINT);
+export const createProduct = async (productData) => {
+  const response = await productApi.post("/products", productData);
   return response.data;
 };
 
 export const updateProduct = async (id, productData) => {
-  const response = await api.put(`${ENDPOINT}/${id}`, productData);
+  const response = await productApi.put(`/products/${id}`, productData);
   return response.data;
 };
 
 export const deleteProduct = async (id) => {
-  await api.delete(`${ENDPOINT}/${id}`);
+  await productApi.delete(`/products/${id}`);
+};
+
+export const getAllCategories = async () => {
+  const response = await productApi.get("/categories");
+  return response.data;
+};
+
+export const getCategoryById = async (id) => {
+  const response = await productApi.get(`/categories/${id}`);
+  return response.data;
 };

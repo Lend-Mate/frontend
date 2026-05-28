@@ -57,7 +57,10 @@ export default function Advert() {
             <i className="fas fa-plus" /> Ücretsiz İlan Oluştur
           </button>
           <div className="header-actions">
-            <button type="button" className="icon-btn">
+            <button type="button" className="icon-btn" onClick={() => {
+              localStorage.removeItem("token");
+              window.location.href = "/auth";
+            }}>
               <i className="fas fa-user" />
             </button>
             <button type="button" className="icon-btn wishlist-btn" onClick={() => {
