@@ -773,7 +773,7 @@ img { max-width: 100%; display: block; }
 
 .modal-images {
   padding: 32px;
-  background: var(--gray-light);
+  background: white;
   border-radius: 20px 0 0 20px;
   display: flex;
   flex-direction: column;

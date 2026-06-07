@@ -140,6 +140,41 @@ body {
   border-color: #1a8fe3;
 }
 
+.form-textarea {
+  width: 100%;
+  min-height: 180px;
+  padding: 12px 14px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 0.95rem;
+  font-family: inherit;
+  outline: none;
+  resize: vertical;
+  background: #fff;
+}
+
+.form-textarea:focus {
+  border-color: #1a8fe3;
+}
+
+.form-row {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  flex-wrap: wrap;
+}
+
+.form-row .form-group {
+  flex: 1;
+  min-width: 220px;
+}
+
+@media (max-width: 760px) {
+  .form-row {
+    flex-direction: column;
+  }
+}
+
 .select-half {
   width: 268px;
 }
@@ -261,6 +296,36 @@ body {
   gap: 12px;
   flex-wrap: wrap;
   margin-bottom: 16px;
+}
+
+.photo-preview-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.photo-preview-item {
+  border: 1px solid #e2e4e8;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #fff;
+}
+
+.photo-preview-img {
+  width: 100%;
+  height: 140px;
+  object-fit: cover;
+  display: block;
+}
+
+.photo-preview-meta {
+  padding: 10px;
+  font-size: 0.8rem;
+  color: #555;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
 }
 
 .upload-box {

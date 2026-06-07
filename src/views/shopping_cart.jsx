@@ -1,4 +1,5 @@
-import { useState, useRef } from "react";
+import { useState } from "react";
+import Header from "../components/Header";
 import "./shopping_cart_css.css";
 
 // ── İkonlar ──────────────────────────────────────────────
@@ -232,9 +233,6 @@ export default function ShoppingCart() {
   const [items, setItems] = useState(INITIAL_ITEMS);
   const [wishlist, setWishlist] = useState(new Set())
   const [cartCount, setCartCount] = useState(0)
-  const [isCatsDropdownOpen, setIsCatsDropdownOpen] = useState(false)
-  const dropdownRef = useRef(null)
-  const catSliderRef = useRef(null)
 
   const handleUpdate = (id, field, value) => {
     setItems((prev) =>
@@ -249,112 +247,7 @@ export default function ShoppingCart() {
   return (
     <div className="cart-page">
 
-      <header className="header">
-        <div className="header-inner">
-          <a href="/" className="logo">
-            <span className="logo-icon">+</span>lendmate
-          </a>
-          <div className="search-bar">
-            <i className="fas fa-search" />
-            <input type="text" placeholder="Marka, ürün veya kategori ara" />
-          </div>
-          <button type="button" className="create-listing-btn" onClick={() => {
-            window.location.href = '/advert'
-          }}>
-            <i className="fas fa-plus" /> Ücretsiz İlan Oluştur
-          </button>
-          <div className="header-actions">
-            <button type="button" className="icon-btn" onClick={() => {
-              localStorage.removeItem("token");
-              window.location.href = "/auth";
-            }}>
-              <i className="fas fa-user" />
-            </button>
-            <button type="button" className="icon-btn wishlist-btn" onClick={() => {
-              window.location.href = '/favorites'
-            }}>
-              <i className="fas fa-heart" />
-              <span className="badge">{wishlist.size}</span>
-            </button>
-            <button type="button" className="icon-btn cart-btn" onClick={() => {
-              window.location.href = '/shopping-cart'
-            }}>
-              <i className="fas fa-shopping-cart" />
-              <span className="badge">{cartCount}</span>
-            </button>
-          </div>
-        </div>
-      </header>
-
-      <nav className="main-nav" style={{fontFamily: "'Outfit', sans-serif"}}>
-        <div className="nav-inner">
-          <div>
-            <button
-              type="button"
-              className="all-cats-btn"
-              onClick={event => {
-                event.stopPropagation()
-                setIsCatsDropdownOpen(prev => !prev)
-              }}
-            >
-              <i className="fas fa-th-large" /> TÜM KATEGORİLER
-            </button>
-          </div>
-          <div>
-            <a href="/products?category=telefon-aksesuarlari">Telefon &amp; Aksesuarları</a>
-            <a href="/products?category=bilgisayar-tablet">Bilgisayar &amp; Tablet</a>
-            <a href="/products?category=ev-ofis">Ev &amp; Ofis</a>
-            <a href="/products?category=oyun-konsolu-vr">Oyun Konsolu &amp; VR</a>
-            <span className="nav-sep">|</span>
-            <a href="/products?category=indirimli-urunler">İndirimli Ürünler</a>
-            <a href="/how-it-works">Nasıl Çalışır?</a>
-          </div>
-        </div>
-      </nav>
-
-      <div className={`cats-dropdown ${isCatsDropdownOpen ? 'open' : ''}`} ref={dropdownRef}>
-        <div className="cats-grid">
-          <a href="/products" className="all-cats-link">
-            <i className="fas fa-th" /> Tüm Ürünler
-          </a>
-          <a href="/products?category=telefon-aksesuarlari">
-            <i className="fas fa-mobile-alt" /> Telefon &amp; Aksesuarları
-          </a>
-          <a href="/products?category=bilgisayar-tablet">
-            <i className="fas fa-laptop" /> Bilgisayar &amp; Tablet
-          </a>
-          <a href="/products?category=sağlık-spors">
-            <i className="fas fa-dumbbell" /> Sağlık &amp; Spor
-          </a>
-          <a href="/products?category=akıllı-ev-ofis">
-            <i className="fas fa-home" /> Akıllı Ev &amp; Ofis
-          </a>
-          <a href="/products?category=kiralamobil">
-            <i className="fas fa-car" /> Kiralamobil
-          </a>
-          <a href="/products?category=ses-müzik">
-            <i className="fas fa-headphones" /> Ses &amp; Müzik
-          </a>
-          <a href="/products?category=kameralar">
-            <i className="fas fa-camera" /> Kameralar
-          </a>
-          <a href="/products?category=saat">
-            <i className="fas fa-clock" /> Saat
-          </a>
-          <a href="/products?category=oyun-konsolu-vr">
-            <i className="fas fa-gamepad" /> Oyun Konsolu &amp; VR
-          </a>
-          <a href="/products?category=anne-bebek">
-            <i className="fas fa-baby" /> Anne &amp; Bebek
-          </a>
-          <a href="/products?category=motosiklet">
-            <i className="fas fa-motorcycle" /> Motosiklet
-          </a>
-          <a href="/products?category=kişisel-bakım">
-            <i className="fas fa-spa" /> Kişisel Bakım
-          </a>
-        </div>
-      </div>
+      <Header categories={[]} wishlistCount={wishlist.size} cartCount={cartCount} />
 
       
       <main className="cart-content">

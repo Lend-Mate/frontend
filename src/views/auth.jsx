@@ -25,12 +25,13 @@ function PasswordInput({ placeholder, value, onChange }) {
 }
 
 function LoginForm({ onForgot, onRegister }) {
-  const [username, setUsername] = useState("");  // backend "username" bekliyor
-  const [password, setPassword] = useState("");
+  const [username, setUsername] = useState("timurturbil@gmail.com");  // backend "username" bekliyor
+  const [password, setPassword] = useState("secret");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const handleLogin = async () => {
+  const handleLogin = async event => {
+    event?.preventDefault();
     if (!username || !password) return;
     setLoading(true);
     setError("");
@@ -54,28 +55,30 @@ function LoginForm({ onForgot, onRegister }) {
         </div>
       )}
 
-      <div className="input-group">
-        <div className="input-wrap">
-          <input
-            type="text"
-            placeholder="Kullanıcı adı veya e-posta*"
-            value={username}
-            onChange={e => setUsername(e.target.value)}
+      <form onSubmit={handleLogin}>
+        <div className="input-group">
+          <div className="input-wrap">
+            <input
+              type="text"
+              placeholder="Kullanıcı adı veya e-posta*"
+              value={username}
+              onChange={e => setUsername(e.target.value)}
+            />
+          </div>
+        </div>
+
+        <div className="input-group">
+          <PasswordInput
+            placeholder="Şifre*"
+            value={password}
+            onChange={e => setPassword(e.target.value)}
           />
         </div>
-      </div>
 
-      <div className="input-group">
-        <PasswordInput
-          placeholder="Şifre*"
-          value={password}
-          onChange={e => setPassword(e.target.value)}
-        />
-      </div>
-
-      <button className="btn btn-green" onClick={handleLogin} disabled={loading}>
-        {loading ? "Giriş yapılıyor..." : "Giriş Yap"}
-      </button>
+        <button className="btn btn-green" type="submit" disabled={loading}>
+          {loading ? "Giriş yapılıyor..." : "Giriş Yap"}
+        </button>
+      </form>
 
       <a className="forgot-link" onClick={onForgot}>Şifremi Unuttum!</a>
 

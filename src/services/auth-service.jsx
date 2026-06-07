@@ -20,3 +20,25 @@ export const logout = () => {
 export const isAuthenticated = () => {
   return !!localStorage.getItem("token");
 };
+
+const decodeJwtPayload = (token) => {
+  try {
+    const payload = token.split(".")[1];
+    if (!payload) return null;
+    const base64 = payload.replace(/-/g, "+").replace(/_/g, "/");
+    const json = decodeURIComponent(
+      Array.from(atob(base64), (c) => `%${(`00${c.charCodeAt(0).toString(16)}`).slice(-2)}`).join("")
+    );
+    return JSON.parse(json);
+  } catch {
+    return null;
+  }
+};
+
+export const getOwnerIdFromToken = () => {
+  const token = localStorage.getItem("token");
+  if (!token) return null;
+  const payload = decodeJwtPayload(token);
+  if (!payload) return null;
+  return payload.userId || null;
+};

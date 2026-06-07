@@ -6,6 +6,7 @@ import Products from './views/products.jsx'
 import Favorites from './views/favorites.jsx'
 import ShoppingCart from './views/shopping_cart.jsx'
 import Advert from "./views/advert.jsx";
+import Profile from "./views/profile.jsx";
 import Auth from "./views/auth.jsx";
 
 function PrivateRoute({ children }) {
@@ -24,6 +25,7 @@ ReactDOM.createRoot(root).render(
       <Route path="/favorites" element={<PrivateRoute><Favorites /></PrivateRoute>} />
       <Route path="/shopping-cart" element={<PrivateRoute><ShoppingCart /></PrivateRoute>} />
       <Route path="/advert" element={<PrivateRoute><Advert /></PrivateRoute>} />
+      <Route path="/profile" element={<PrivateRoute><Profile /></PrivateRoute>} />
     </Routes>
   </BrowserRouter>
 );
