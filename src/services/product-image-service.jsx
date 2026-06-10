@@ -1,4 +1,4 @@
-import productApi from "./api";
+import {productApi} from "./api";
 
 export const uploadFileToS3 = async (file) => {
   const formData = new FormData();

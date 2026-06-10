@@ -1,7 +1,8 @@
-import api from "./api";
+import { userApi } from "./api";
+
 
 export const login = async (username, password) => {
-  const response = await api.post("/auth/login", { username, password });
+  const response = await userApi.post("/auth/login", { username, password });
   // backend düz string döndürüyor
   const token = response.data;
   localStorage.setItem("token", token);
@@ -9,7 +10,7 @@ export const login = async (username, password) => {
 };
 
 export const register = async (userData) => {
-  const response = await api.post("/auth/register", userData);
+  const response = await userApi.post("/auth/register", userData);
   return response.data;
 };
 

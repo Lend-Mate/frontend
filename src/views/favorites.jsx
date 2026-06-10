@@ -3,6 +3,8 @@ import Header from "../components/Header";
 import ProductCard from "../components/ProductCard";
 import ProductModal from "../components/ProductDetailModal";
 import { getAllProducts, getAllCategories } from "../services/product-service";
+import { getOwnerIdFromToken } from "../services/auth-service";
+import { getFavourites } from "../services/favourite-service";
 
 // S3 bucket base URL — kendi bucket adresinle değiştir
 const S3_BASE = "https://lend-mate-bucket.s3.amazonaws.com"
@@ -37,7 +39,7 @@ function Toast({ msg }) {
 
 // ── ANA BİLEŞEN ─────────────────────────────────────────────────────────────
 export default function Favorites() {
-  const [allProducts, setAllProducts] = useState([])
+  const [products, setAllProducts] = useState([])
   const [categories, setCategories] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
@@ -59,10 +61,11 @@ export default function Favorites() {
 
   // Veri çekme
   useEffect(() => {
+    const userId = getOwnerIdFromToken();
     const fetchData = async () => {
       try {
         const [prods, cats] = await Promise.all([
-          getAllProducts(),
+          getFavourites(userId),
           getAllCategories(),
         ])
         setAllProducts(prods)
@@ -110,7 +113,7 @@ export default function Favorites() {
   }
 
   // Sadece wishlist'teki ürünleri göster
-  let products = allProducts.filter(p => wishlist.has(p.id))
+  
   if (sortBy === "asc") products.sort((a, b) => Number(a.price) - Number(b.price))
   if (sortBy === "desc") products.sort((a, b) => Number(b.price) - Number(a.price))
 
@@ -181,12 +184,12 @@ export default function Favorites() {
             <div style={s.productsGrid(viewMode === "list")}> 
               {products.map(product => (
                 <ProductCard
-                  key={product.id}
-                  product={product}
+                  key={product.product.id}
+                  product={product.product}
                   openModal={openModal}
                   toggleWish={toggleWish}
                   getImageUrl={getImageUrl}
-                  isWished={wishlist.has(product.id)}
+                  isWished={wishlist.has(product.product.id)}
                 />
               ))}
             </div>

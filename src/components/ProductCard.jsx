@@ -1,3 +1,6 @@
+import { getOwnerIdFromToken } from "../services/auth-service"
+import { addFavourite } from "../services/favourite-service"
+
 export default function ProductCard({ product, openModal, toggleWish, getImageUrl, isWished }) {
   const primaryImage = product.images?.find(img => img.isPrimary) || product.images?.[0]
 
@@ -10,6 +13,8 @@ export default function ProductCard({ product, openModal, toggleWish, getImageUr
         onClick={e => {
           e.stopPropagation()
           toggleWish(product.id)
+          const userId = getOwnerIdFromToken();
+          addFavourite({ productId: product.id, userId })
         }}
       >
         <i className={`fa${isWished ? 's' : 'r'} fa-heart`} />

@@ -93,7 +93,7 @@ function RegisterForm({ onLogin }) {
   const [form, setForm] = useState({
     firstName: "", lastName: "", username: "", email: "",
     phone: "", password: "", passwordConfirm: "",
-    role: "CUSTOMER", createdAt: null, updatedAt: null,
+    role: "USER", createdAt: null, updatedAt: null,
     deleted: false, verified: false,
     kabul: "", onay: false,
   });
