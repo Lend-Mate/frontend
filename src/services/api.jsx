@@ -1,8 +1,8 @@
 import axios from "axios";
 
 export const productApi = axios.create({
-  //baseURL: "http://178.104.91.123/api", // product service port — application.properties'e göre değiştir
-  baseURL: "http://localhost:8080/", // product service port — application.properties'e göre değiştir
+  baseURL: "http://178.104.91.123/api", // product service port — application.properties'e göre değiştir
+  //baseURL: "http://localhost:8080/", // product service port — application.properties'e göre değiştir
   headers: { "Content-Type": "application/json" },
 });
 
@@ -25,8 +25,8 @@ productApi.interceptors.response.use(
 );
 
 export const userApi = axios.create({
-  //baseURL: "http://178.104.91.123/api", // user service port — application.properties'e göre değiştir
-  baseURL: "http://localhost:8081/", // user service port — application.properties'e göre değiştir
+  baseURL: "http://178.104.91.123/api", // user service port — application.properties'e göre değiştir
+  //baseURL: "http://localhost:8081/", // user service port — application.properties'e göre değiştir
   headers: { "Content-Type": "application/json" },
 });
 
