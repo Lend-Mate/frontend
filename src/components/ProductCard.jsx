@@ -13,8 +13,10 @@ export default function ProductCard({ product, openModal, toggleWish, getImageUr
         onClick={e => {
           e.stopPropagation()
           toggleWish(product.id)
-          const userId = getOwnerIdFromToken();
-          addFavourite({ productId: product.id, userId })
+          if (window.location.pathname !== '/favorites') {
+            const userId = getOwnerIdFromToken();
+            addFavourite({ productId: product.id, userId })
+          }
         }}
       >
         <i className={`fa${isWished ? 's' : 'r'} fa-heart`} />
