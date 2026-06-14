@@ -3,6 +3,8 @@ import Header from "../components/Header";
 import ProductCard from "../components/ProductCard";
 import ProductModal from "../components/ProductDetailModal";
 import { getAllProducts, getAllCategories } from "../services/product-service";
+import { addToCart } from "../services/order-service";
+import { getOwnerIdFromToken } from "../services/auth-service";
 
 // S3 bucket base URL — kendi bucket adresinle değiştir
 const S3_BASE = "https://lend-mate-bucket.s3.amazonaws.com"
@@ -159,6 +161,11 @@ export default function Products() {
     setCartCount(prev => prev + 1)
     closeModal()
     showToast(`${product.productName} sepete eklendi!`)
+    const userId = getOwnerIdFromToken();
+    addToCart({ productId: product.id, userId }).catch(err => {
+      console.error("Sepete ürün eklenirken bir hata oluştu:", err)
+      showToast("Ürün sepette eklenirken bir hata oluştu.")
+    })
   }
 
   // Aktif kategori adı
