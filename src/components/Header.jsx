@@ -3,8 +3,7 @@ import { useEffect, useRef, useState } from "react"
 
 const DEFAULT_NAV_LINKS = [
   { href: "/products", label: "Tüm Ürünler" },
-  { href: "/products?sale=true", label: "İndirimli Ürünler" },
-  { href: "/how-it-works", label: "Nasıl Çalışır?" },
+  { href: "/products?sale=true", label: "İndirimli Ürünler" }
 ]
 
 export default function Header({ categories = [], wishlistCount = 0, cartCount = 0 }) {
