@@ -33,3 +33,13 @@ export const getCategoryById = async (id) => {
   const response = await productApi.get(`/categories/${id}`);
   return response.data;
 };
+
+export const searchProducts = async (text) => {
+  const response = await productApi.get("/products/search?text=" + text);
+  return response.data;
+};
+
+export const searchProductPostgres = async (text) => {
+  const response = await productApi.get(`/products/search/postgres?text=${text}`);
+  return response.data;
+};

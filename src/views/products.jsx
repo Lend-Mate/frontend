@@ -2,10 +2,9 @@ import { useState, useEffect } from "react";
 import Header from "../components/Header";
 import ProductCard from "../components/ProductCard";
 import ProductModal from "../components/ProductDetailModal";
-import { getAllProducts, getAllCategories } from "../services/product-service";
+import { getAllProducts, getAllCategories, searchProducts, searchProductPostgres } from "../services/product-service";
 import { addToCart } from "../services/order-service";
 import { getOwnerIdFromToken } from "../services/auth-service";
-
 // S3 bucket base URL — kendi bucket adresinle değiştir
 const S3_BASE = "https://lend-mate-bucket.s3.amazonaws.com"
 
@@ -97,17 +96,21 @@ export default function Products() {
   const [checkedBrands, setCheckedBrands] = useState(new Set())
   const [toast, setToast] = useState("")
   const [modalProduct, setModalProduct] = useState(null)
+  const [searchDuration, setSearchDuration] = useState(0)
 
   // URL'den categoryId parametresini oku
   const urlParams = new URLSearchParams(window.location.search)
   const categoryIdFilter = urlParams.get('categoryId')
+
+  const textSearch = urlParams.get('search')
+  const textSearchPostgre = urlParams.get('searchPostgres')
 
   // Veri çekme
   useEffect(() => {
     const fetchData = async () => {
       try {
         const [prods, cats] = await Promise.all([
-          getAllProducts(),
+          handleGetProducts(),
           getAllCategories(),
         ])
         setApiProducts(prods)
@@ -121,6 +124,25 @@ export default function Products() {
     }
     fetchData()
   }, [])
+
+
+  const handleGetProducts = async () => {
+    const startTime = performance.now();
+    let result;
+
+    if (textSearch == null && textSearchPostgre == null) {
+      result = await getAllProducts();
+    } else if (textSearchPostgre == null) {
+      result = await searchProducts(textSearch);
+    } else {
+      result = await searchProductPostgres(textSearchPostgre);
+    }
+
+    const endTime = performance.now();
+    setSearchDuration(endTime - startTime);
+
+    return result;
+  }
 
 
   function showToast(msg) {
@@ -201,6 +223,10 @@ export default function Products() {
             </div>
             <div style={{ fontSize: 13, color: "#888" }}>
               {loading ? 'Yükleniyor...' : `${products.length} ürün bulundu`}
+
+              <span style={{ margin: "0 8px", color: "#ddd" }}>|</span>
+
+              {searchDuration > 0 && ` Arama süresi: ${searchDuration.toFixed(2)} ms`}
             </div>
             <select style={s.sortSelect} value={sortBy} onChange={e => setSortBy(e.target.value)}>
               <option value="default">Sırala</option>
