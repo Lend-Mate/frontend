@@ -1,7 +1,32 @@
 import {productApi} from "./api";
 
-export const getAllProducts = async () => {
-  const response = await productApi.get("/products");
+export const getAllProducts = async ({
+  page = 0,
+  size = 5,
+  sortBy,
+  ascending = true,
+  categoryId,
+  brands,
+  minPrice,
+  maxPrice,
+  minRentalDays,
+  maxRentalDays,
+} = {}) => {
+  const response = await productApi.get("/products", {
+    params: {
+      page,
+      size,
+      sortBy,
+      ascending,
+      categoryId,
+      brands,
+      minPrice,
+      maxPrice,
+      minRentalDays,
+      maxRentalDays,
+    },
+  });
+
   return response.data;
 };
 
@@ -34,12 +59,57 @@ export const getCategoryById = async (id) => {
   return response.data;
 };
 
-export const searchProducts = async (text) => {
-  const response = await productApi.get("/products/search?text=" + text);
+export const searchProducts = async ({
+  text,
+  page = 0,
+  size = 5,
+  sortBy = "id",
+  ascending = true,
+  categoryId,
+  brands,
+  minPrice,
+  maxPrice,
+  minRentalDays,
+  maxRentalDays,
+}) => {
+  const response = await productApi.get("/products/search", {
+    params: {
+      text,
+      page,
+      size,
+      sortBy,
+      ascending,
+      categoryId,
+      brands,
+      minPrice,
+      maxPrice,
+      minRentalDays,
+      maxRentalDays,
+    },
+  });
+
   return response.data;
 };
 
-export const searchProductPostgres = async (text) => {
-  const response = await productApi.get(`/products/search/postgres?text=${text}`);
+export const getUniqueBrands = async ({
+  text,
+  categoryId,
+  brands,
+  minPrice,
+  maxPrice,
+  minRentalDays,
+  maxRentalDays,
+}) => {
+  const response = await productApi.get(`/products/brands`, {
+    params: {
+      text,
+      categoryId,
+      brands,
+      minPrice,
+      maxPrice,
+      minRentalDays,
+      maxRentalDays,
+    }
+  });
   return response.data;
 };

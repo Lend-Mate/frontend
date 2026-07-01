@@ -52,9 +52,6 @@ export default function Header({ categories = [], wishlistCount = 0, cartCount =
                 <form onSubmit={handleSearchSubmitByElastic} style={{ width: "100%" }}>
                 <input type="text" name="searchText" placeholder="Elasticsearch ile ara..." />
                </form>
-               <form onSubmit={handleSearchSubmitByPostgre} style={{ width: "100%" }}>
-                <input type="text" name="searchTextPostgre" placeholder="Postgresql ile ara..." />
-               </form>
               </div>
          
           <button
@@ -218,15 +215,6 @@ export default function Header({ categories = [], wishlistCount = 0, cartCount =
     const searchText = formData.get("searchText")
     if (searchText) {
       window.location.href = `/products?search=${encodeURIComponent(searchText)}`
-    }
-  }
-
-  function handleSearchSubmitByPostgre(event) {
-    event.preventDefault()
-    const formData = new FormData(event.target)
-    const searchText = formData.get("searchTextPostgre")
-    if (searchText) {
-      window.location.href = `/products?searchPostgres=${encodeURIComponent(searchText)}`
     }
   }
 }

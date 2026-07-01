@@ -2,9 +2,10 @@ import { useState, useEffect } from "react";
 import Header from "../components/Header";
 import ProductCard from "../components/ProductCard";
 import ProductModal from "../components/ProductDetailModal";
-import { getAllProducts, getAllCategories, searchProducts, searchProductPostgres } from "../services/product-service";
+import { getAllProducts, getAllCategories, searchProducts, getUniqueBrands } from "../services/product-service";
 import { addToCart } from "../services/order-service";
 import { getOwnerIdFromToken } from "../services/auth-service";
+import Pagination from "../components/Pagination";
 // S3 bucket base URL — kendi bucket adresinle değiştir
 const S3_BASE = "https://lend-mate-bucket.s3.amazonaws.com"
 
@@ -41,7 +42,7 @@ function Toast({ msg }) {
 }
 
 // ── SIDEBAR ─────────────────────────────────────────────────────────────────
-function Sidebar({ brands, checkedBrands, onBrandToggle }) {
+function Sidebar({ brands, checkedBrands, onBrandToggle, priceRange, onPriceRangeToggle, rentalDaysRange, onRentalDaysToggle }) {
   return (
     <aside style={s.sidebar}>
       <div style={s.filterBox}>
@@ -61,20 +62,30 @@ function Sidebar({ brands, checkedBrands, onBrandToggle }) {
 
       <div style={s.filterBox}>
         <div style={s.filterTitle}>Fiyat Aralığı</div>
-        {["500 Altı", "500 - 1000", "1000 - 2000", "2000 - 5000", "5000 Üzeri"].map((range) => (
-          <label key={range} style={s.filterItem}>
-            <input type="checkbox" style={{ accentColor: "#4CAF50", width: 15, height: 15, cursor: "pointer" }} />
-            {range} TL
+        {priceRange.map((range) => (
+          <label key={range.label} style={s.filterItem}>
+            <input
+              type="checkbox"
+              checked={range.checked}
+              onChange={() => onPriceRangeToggle(range)}
+              style={{ accentColor: "#4CAF50", width: 15, height: 15, cursor: "pointer" }}
+            />
+            {range.label}
           </label>
         ))}
       </div>
 
       <div style={s.filterBox}>
         <div style={s.filterTitle}>Kiralama Süresi</div>
-        {["1-7 Gün", "7-14 Gün", "14-30 Gün", "30+ Gün"].map((dur) => (
-          <label key={dur} style={s.filterItem}>
-            <input type="checkbox" style={{ accentColor: "#4CAF50", width: 15, height: 15, cursor: "pointer" }} />
-            {dur}
+        {rentalDaysRange.map((range) => (
+          <label key={range.label} style={s.filterItem}>
+            <input
+              type="checkbox"
+              checked={range.checked}
+              onChange={() => onRentalDaysToggle(range)}
+              style={{ accentColor: "#4CAF50", width: 15, height: 15, cursor: "pointer" }}
+            />
+            {range.label}
           </label>
         ))}
       </div>
@@ -84,7 +95,14 @@ function Sidebar({ brands, checkedBrands, onBrandToggle }) {
 
 // ── ANA BİLEŞEN ─────────────────────────────────────────────────────────────
 export default function Products() {
-  const [apiProducts, setApiProducts] = useState([])
+  const [pageData, setPageData] = useState({
+    content: [],
+    totalPages: 0,
+    totalElements: 0,
+    number: 0,
+  })
+  const [page, setPage] = useState(0)
+  const [size] = useState(12)
   const [categories, setCategories] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
@@ -97,52 +115,94 @@ export default function Products() {
   const [toast, setToast] = useState("")
   const [modalProduct, setModalProduct] = useState(null)
   const [searchDuration, setSearchDuration] = useState(0)
+  const [brands, setBrands] = useState([])
+
+
+  const [priceRange, setPriceRange] = useState([
+    {"label": "500 Altı", "min": 0, "max": 499},
+    {"label": "500 - 1000", "min": 500, "max": 999},
+    {"label": "1000 - 2000", "min": 1000, "max": 1999},
+    {"label": "2000 - 5000", "min": 2000, "max": 4999},
+    {"label": "5000 Üzeri", "min": 5000, "max": 999999999999999}
+  ])
+
+  const [rentalDaysRange, setRentalDaysRange] = useState([
+    {"label": "1-7 Gün", "min": 1, "max": 7},
+    {"label": "7-14 Gün", "min": 7, "max": 14},
+    {"label": "14-30 Gün", "min": 14, "max": 30},
+    {"label": "30+ Gün", "min": 30, "max": 999999999999999}
+  ])
 
   // URL'den categoryId parametresini oku
   const urlParams = new URLSearchParams(window.location.search)
   const categoryIdFilter = urlParams.get('categoryId')
 
   const textSearch = urlParams.get('search')
-  const textSearchPostgre = urlParams.get('searchPostgres')
 
-  // Veri çekme
+  useEffect(() => {
+    const params = {
+      text: textSearch || undefined,
+      categoryId: categoryIdFilter || undefined,
+      brands: checkedBrands.size > 0 ? Array.from(checkedBrands) : undefined,
+      minPrice: priceRange.find(r => r.checked)?.min,
+      maxPrice: priceRange.find(r => r.checked)?.max,
+      minRentalDays: rentalDaysRange.find(r => r.checked)?.min,
+      maxRentalDays: rentalDaysRange.find(r => r.checked)?.max,
+    };
+    getUniqueBrands(params).then(_brands => {
+      setBrands(_brands);
+    }).catch(err => {
+      console.error("Markalar yüklenirken bir hata oluştu:", err)
+    })
+  }, []);
+
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [prods, cats] = await Promise.all([
-          handleGetProducts(),
-          getAllCategories(),
-        ])
-        setApiProducts(prods)
-        setCategories(cats)
+        setLoading(true);
+        await handleGetProducts(0);
       } catch (err) {
-        setError('Ürünler yüklenirken bir hata oluştu.')
-        console.error(err)
+        setError("Ürünler yüklenirken bir hata oluştu.");
       } finally {
-        setLoading(false)
+        setLoading(false);
       }
-    }
-    fetchData()
-  }, [])
+    };
+
+    fetchData();
+  }, [textSearch, checkedBrands, priceRange, rentalDaysRange, sortBy]);
 
 
-  const handleGetProducts = async () => {
+  const handleGetProducts = async (pageNumber = page) => {
     const startTime = performance.now();
-    let result;
 
-    if (textSearch == null && textSearchPostgre == null) {
-      result = await getAllProducts();
-    } else if (textSearchPostgre == null) {
-      result = await searchProducts(textSearch);
+    let result;
+    const params = {
+      text: textSearch || undefined,
+      page: pageNumber,
+      size,
+      sortBy: sortBy === "default" ? "id" : "price",
+      ascending: sortBy !== "desc",
+      categoryId: categoryIdFilter || undefined,
+      brands: checkedBrands.size > 0 ? Array.from(checkedBrands) : undefined,
+      minPrice: priceRange.find(r => r.checked)?.min,
+      maxPrice: priceRange.find(r => r.checked)?.max,
+      minRentalDays: rentalDaysRange.find(r => r.checked)?.min,
+      maxRentalDays: rentalDaysRange.find(r => r.checked)?.max,
+    };
+
+    if (!textSearch) {
+      result = await getAllProducts(params);
     } else {
-      result = await searchProductPostgres(textSearchPostgre);
-    }
+      result = await searchProducts(params);
+    } 
 
     const endTime = performance.now();
     setSearchDuration(endTime - startTime);
 
+    setPageData(result);
+
     return result;
-  }
+  };
 
 
   function showToast(msg) {
@@ -150,15 +210,8 @@ export default function Products() {
     setTimeout(() => setToast(""), 2500)
   }
 
-  // Marka listesini ürünlerden dinamik üret
-  const brands = [...new Set(apiProducts.map(p => p.brand).filter(Boolean))]
-
   // Filtre + sıralama
-  let products = [...apiProducts]
-  if (categoryIdFilter) products = products.filter(p => String(p.categoryId) === categoryIdFilter)
-  if (checkedBrands.size > 0) products = products.filter(p => checkedBrands.has(p.brand))
-  if (sortBy === "asc") products.sort((a, b) => Number(a.price) - Number(b.price))
-  if (sortBy === "desc") products.sort((a, b) => Number(b.price) - Number(a.price))
+  const products = pageData.content || [];
 
   const toggleWish = (id) => {
     setWishlist(prev => {
@@ -207,6 +260,14 @@ export default function Products() {
           brands={brands}
           checkedBrands={checkedBrands}
           onBrandToggle={handleBrandToggle}
+          priceRange={priceRange}
+          onPriceRangeToggle={(range) => {
+            setPriceRange(prev => prev.map(r => r.label === range.label ? { ...r, checked: !r.checked } : r));
+          }}
+          rentalDaysRange={rentalDaysRange}
+          onRentalDaysToggle={(range) => {
+            setRentalDaysRange(prev => prev.map(r => r.label === range.label ? { ...r, checked: !r.checked } : r));
+          }}
         />
 
         <main style={s.main}>
@@ -222,7 +283,7 @@ export default function Products() {
               <button style={s.viewBtn(viewMode === "list")} onClick={() => setViewMode("list")}>☰</button>
             </div>
             <div style={{ fontSize: 13, color: "#888" }}>
-              {loading ? 'Yükleniyor...' : `${products.length} ürün bulundu`}
+              {loading ? 'Yükleniyor...' : `${pageData.totalElements} ürün bulundu`}
 
               <span style={{ margin: "0 8px", color: "#ddd" }}>|</span>
 
@@ -264,6 +325,16 @@ export default function Products() {
               )}
             </>
           )}
+
+          {!loading ? <Pagination
+            page={pageData.number}
+            totalPages={pageData.totalPages}
+            onPageChange={(newPage) => {
+              setPage(newPage);
+              handleGetProducts(newPage);
+            }}
+          />
+            : null}
         </main>
       </div>
 

@@ -45,18 +45,21 @@ function App() {
     const fetchData = async () => {
       try {
         const [prods, cats] = await Promise.all([
-          getAllProducts(),
+          getAllProducts({
+            page: 0,
+            size: 8, // homepage limiti
+          }),
           getAllCategories(),
-        ])
-        setProducts(prods)
-        setCategories(cats)
+        ]);
+
+        setProducts(prods.content); // 👈 KRİTİK
+        setCategories(cats);
       } catch (err) {
-        setError('Veriler yüklenirken bir hata oluştu.')
-        console.error(err)
+        setError("Veriler yüklenirken bir hata oluştu.");
       } finally {
-        setLoading(false)
+        setLoading(false);
       }
-    }
+    };
     fetchData()
   }, [])
 
@@ -67,8 +70,8 @@ function App() {
     return () => window.clearTimeout(timeout)
   }, [toastMessage])
 
-  const newProducts = products.slice(0, 4)
-  const saleProducts = products.slice(4)
+  const newProducts = products.slice(0, 4);
+  const saleProducts = products.slice(0);
 
   const toggleWish = (id) => {
     setWishlist(prev => {
