@@ -65,9 +65,19 @@ export default function ProductModal({ product, getImageUrl, closeModal, handleR
               </div>
             </div>
 
-            <button type="button" className="modal-rent-btn" onClick={() => handleRent(product)}>
-              Kirala
-            </button>
+            <div style={{ display: 'flex', gap: '10px', marginTop: '20px' }}>
+              <button style={{
+                background: "white", 
+                border: "1px solid #ccc",
+                }} type="button" className="modal-rent-btn" onClick={() => {
+                  window.location.href = `/product-detail?productId=${product.id}`
+                }}>
+                <span style={{color: "black"}}>Detay</span>
+              </button>
+              <button type="button" className="modal-rent-btn" onClick={() => handleRent(product)}>
+                Kirala
+              </button>
+            </div>
           </div>
         </div>
       </div>
