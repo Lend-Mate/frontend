@@ -6,6 +6,7 @@ import { getAllProducts, getAllCategories, searchProducts, getUniqueBrands } fro
 import { addToCart } from "../services/order-service";
 import { getOwnerIdFromToken } from "../services/auth-service";
 import Pagination from "../components/Pagination";
+import Toast from "../components/Toast";
 // S3 bucket base URL — kendi bucket adresinle değiştir
 const S3_BASE = "https://lend-mate-bucket.s3.amazonaws.com"
 
@@ -29,16 +30,6 @@ const s = {
   viewBtn: (active) => ({ background: "#fff", border: active ? "1.5px solid #4CAF50" : "1px solid #ddd", borderRadius: 6, width: 34, height: 34, display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", fontSize: 14, color: active ? "#4CAF50" : "#555" }),
   sortSelect: { border: "1px solid #ddd", borderRadius: 8, padding: "6px 12px", fontSize: 13, fontFamily: "inherit", cursor: "pointer", background: "#fff" },
   productsGrid: (list) => ({ display: "grid", gridTemplateColumns: list ? "1fr" : "repeat(3, 1fr)", gap: 14 }),
-}
-
-// ── TOAST ───────────────────────────────────────────────────────────────────
-function Toast({ msg }) {
-  if (!msg) return null
-  return (
-    <div style={{ position: "fixed", bottom: 24, left: "50%", transform: "translateX(-50%)", background: "#111", color: "#fff", padding: "12px 24px", borderRadius: 50, fontSize: 13, fontWeight: 600, zIndex: 99, display: "flex", alignItems: "center", gap: 8 }}>
-      <span style={{ color: "#4CAF50" }}>✓</span> {msg}
-    </div>
-  )
 }
 
 // ── SIDEBAR ─────────────────────────────────────────────────────────────────

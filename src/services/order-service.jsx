@@ -13,3 +13,9 @@ export const addToCart = async (cartRequest) => {
 export const deleteCart = async (id) => {
   await productApi.delete(`/carts/${id}`);
 };
+
+export const createOrder = async (object) => {
+  const response = await productApi.post("/orders", object);
+
+  return response.data;
+};

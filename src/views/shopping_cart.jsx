@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
 import Header from "../components/Header";
 import "./shopping_cart_css.css";
-import { deleteCart, getCartsByUser } from "../services/order-service";
+import { deleteCart, getCartsByUser, createOrder } from "../services/order-service";
 import { getOwnerIdFromToken } from "../services/auth-service";
 import { IMAGE_PREFIX } from "../constants";
+import Toast from "../components/Toast";
 
 // ── İkonlar (Aynı Kalıyor) ────────────────────────────────
 const IconClock = () => (
@@ -218,6 +219,7 @@ export default function ShoppingCart() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [wishlist] = useState(new Set());
+  const [toastMessage, setToastMessage] = useState("");
 
   // Component mount edildiğinde API'den sepet verisini çekiyoruz
   useEffect(() => {
@@ -253,6 +255,11 @@ export default function ShoppingCart() {
     );
   };
 
+  const handleToast = (message) => {
+    setToastMessage(message);
+    setTimeout(() => setToastMessage(""), 2500); // 2.5 saniye sonra otomatik kaybolur
+  };
+
   // Backend entegrasyonlu silme fonksiyonu
   const handleDelete = async (id) => {
     try {
@@ -261,6 +268,33 @@ export default function ShoppingCart() {
     } catch (err) {
       console.error("Ürün sepetten silinemedi:", err);
       alert("Ürün silinirken bir hata oluştu.");
+    }
+  };
+
+  const createOrderFunction = async () => {
+    try {
+      const orderProp = {
+        userId: getOwnerIdFromToken(),
+        description: "Sepet Onayı",
+        status: "PENDING",
+        totalPrice: items.reduce((s, i) => s + (Number(i.product?.price) || 0), 0),
+        items: items.map(item => ({
+          productId: item.product.id,
+          quantity: 1, // Varsayılan olarak 1 adet
+          unitPrice: item.product.price,
+          startDate: new Date().toISOString(), // Bugünün tarihi
+          endDate: new Date(new Date().setDate(new Date().getDate() + 1)).toISOString()
+        })),
+        addressId: 1
+      };
+      await createOrder(orderProp);
+
+      handleToast(`Siparişiniz başarıyla oluşturuldu!`);
+      setItems([]); // Sepeti temizle
+
+    } catch (err) {
+      console.error("Ürün sepetten silinemedi:", err);
+      handleToast("Sipariş oluşturulurken bir hata oluştu.");
     }
   };
 
@@ -312,10 +346,12 @@ export default function ShoppingCart() {
             {/* Sağ: Özet ve Onay */}
             <div className="cart-sidebar">
               <CartSummary items={items} />
-              <button className="checkout-btn">Sepeti Onayla</button>
+              <button className="checkout-btn" onClick={() => createOrderFunction()}>Sepeti Onayla</button>
             </div>
           </div>
         )}
+
+        <Toast msg={toastMessage} />
       </main>
     </div>
   );

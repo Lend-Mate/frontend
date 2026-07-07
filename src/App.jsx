@@ -4,6 +4,7 @@ import Header from './components/Header'
 import ProductCard from './components/ProductCard'
 import ProductModal from './components/ProductDetailModal'
 import { getAllProducts, getAllCategories } from './services/product-service'
+import Toast from './components/Toast'
 
 // S3 bucket base URL — kendi bucket adresinle değiştir
 const S3_BASE = "https://lend-mate-bucket.s3.amazonaws.com"
@@ -12,19 +13,6 @@ function getImageUrl(key) {
   if (!key) return 'https://placehold.co/400x300?text=Görsel+Yok'
   if (key.startsWith('http')) return key
   return `${S3_BASE}/${key}`
-}
-
-function Toast({ msg }) {
-  if (!msg) return null
-  return (
-    <div style={{
-      position: "fixed", bottom: 24, left: "50%", transform: "translateX(-50%)",
-      background: "#111", color: "#fff", padding: "12px 24px", borderRadius: 50,
-      fontSize: 13, fontWeight: 600, zIndex: 99, display: "flex", alignItems: "center", gap: 8
-    }}>
-      <span style={{ color: "#4CAF50" }}>✓</span> {msg}
-    </div>
-  )
 }
 
 function App() {

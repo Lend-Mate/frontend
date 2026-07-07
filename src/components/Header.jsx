@@ -50,7 +50,7 @@ export default function Header({ categories = [], wishlistCount = 0, cartCount =
                 
                 <i className="fas fa-search" />
                 <form onSubmit={handleSearchSubmitByElastic} style={{ width: "100%" }}>
-                <input type="text" name="searchText" placeholder="Elasticsearch ile ara..." />
+                <input type="text" name="searchText" placeholder="Ürün, kategori veya marka ara" />
                </form>
               </div>
          

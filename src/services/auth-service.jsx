@@ -41,5 +41,5 @@ export const getOwnerIdFromToken = () => {
   if (!token) return null;
   const payload = decodeJwtPayload(token);
   if (!payload) return null;
-  return payload.userId || null;
+  return parseInt(payload.userId) || null;
 };
