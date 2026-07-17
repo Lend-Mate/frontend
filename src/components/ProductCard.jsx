@@ -2,14 +2,27 @@ import { getOwnerIdFromToken } from "../services/auth-service"
 import { addFavourite } from "../services/favourite-service"
 
 export default function ProductCard({ product, openModal, toggleWish, getImageUrl, isWished }) {
+  const quantity = product.stockQuantity;
+  const isRented = quantity === 0; // Stok 0 ise kiralanmıştır
   const primaryImage = product.images?.find(img => img.isPrimary) || product.images?.[0]
 
   return (
-    <div className="product-card" onClick={() => openModal(product)}>
+    <div 
+      className={`product-card ${isRented ? 'rented' : ''}`} 
+      onClick={() => !isRented && openModal(product)} // Eğer kiralandıysa tıklanıp modal açılmasın
+    >
+      {/* RENTED Çapraz Yazı Katmanı */}
+      {isRented && (
+        <div className="product-rented-overlay">
+          <span>KİRALANDI</span>
+        </div>
+      )}
+
       <span className="product-badge">Yeni</span>
       <button
         type="button"
         className={`product-wish ${isWished ? 'active' : ''}`}
+        disabled={isRented} // Kiralandıysa favoriye ekleme kapatılabilir (isteğe bağlı)
         onClick={e => {
           e.stopPropagation()
           toggleWish(product.id)
