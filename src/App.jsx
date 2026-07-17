@@ -5,6 +5,8 @@ import ProductCard from './components/ProductCard'
 import ProductModal from './components/ProductDetailModal'
 import { getAllProducts, getAllCategories } from './services/product-service'
 import Toast from './components/Toast'
+import { getOwnerIdFromToken } from './services/auth-service'
+import { addToCart } from './services/order-service'
 
 // S3 bucket base URL — kendi bucket adresinle değiştir
 const S3_BASE = "https://lend-mate-bucket.s3.amazonaws.com"
@@ -76,6 +78,11 @@ function App() {
     setCartCount(prev => prev + 1)
     closeModal()
     setToastMessage(`${product.productName} sepete eklendi!`)
+    const userId = getOwnerIdFromToken();
+    addToCart({ productId: product.id, userId }).catch(err => {
+      console.error("Sepete ürün eklenirken bir hata oluştu:", err)
+      showToast("Ürün sepette eklenirken bir hata oluştu.")
+    })
   }
 
   const scrollCat = (offset) => {

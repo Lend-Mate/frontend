@@ -1,0 +1,329 @@
+
+
+.orders-container {
+  padding-top: 40px;
+  max-width: 1000px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Sipariş Kartı */
+.order-card {
+  background: #fff;
+  border: 1px solid #e2e2e2;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.order-header {
+  display: flex;
+  background-color: #fafafa;
+  padding: 15px 20px;
+  border-bottom: 1px solid #e2e2e2;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 30px;
+}
+
+.header-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.header-item .label {
+  font-size: 12px;
+  color: #666;
+  font-weight: bold;
+  margin-bottom: 4px;
+}
+
+.header-item .value {
+  font-size: 13px;
+  color: #333;
+}
+
+.header-item .price {
+  color: #f27a1a;
+  font-weight: bold;
+}
+
+.btn-details {
+  margin-left: auto;
+  background-color: #f27a1a;
+  color: #fff;
+  border: none;
+  padding: 8px 24px;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+/* Kart İçeriği */
+.order-content {
+  display: flex;
+  align-items: center;
+  padding: 20px;
+  gap: 20px;
+}
+
+.status-section {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 180px;
+}
+
+.status-icon {
+  color: #0bc15c;
+  font-weight: bold;
+  font-size: 18px;
+}
+
+.status-text {
+  color: #0bc15c;
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.status-sub {
+  font-size: 12px;
+  color: #666;
+}
+
+.products-images {
+  display: flex;
+  gap: 10px;
+  flex-grow: 1;
+}
+
+.product-thumb {
+  width: 50px;
+  height: 60px;
+  object-fit: contain;
+  border: 1px solid #e2e2e2;
+  border-radius: 4px;
+  padding: 2px;
+}
+
+.btn-rate {
+  background: #fff;
+  color: #f27a1a;
+  border: 1px solid #f27a1a;
+  padding: 8px 20px;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-rate:hover {
+  background-color: #fff4ec;
+}
+
+/* MODAL - POPUP YAPISI */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content-wrapper {
+  display: flow;
+  background: #fff;
+  width: 100%;
+  max-width: 550px;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 20px;
+  border-bottom: 1px solid #eee;
+}
+
+.modal-header h3 {
+  margin: 0;
+  font-size: 18px;
+  color: #333;
+}
+
+.close-button {
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  color: #666;
+}
+
+.modal-body {
+  padding: 20px;
+}
+
+.modal-product-info {
+  display: flex;
+  gap: 15px;
+}
+
+.modal-product-img {
+  width: 70px;
+  height: 85px;
+  object-fit: contain;
+  border: 1px solid #eee;
+  border-radius: 6px;
+}
+
+.modal-product-details h4 {
+  margin: 0 0 5px 0;
+  font-size: 15px;
+  color: #333;
+}
+
+.modal-product-details p {
+  margin: 0;
+  font-size: 13px;
+  color: #666;
+  line-height: 1.4;
+}
+
+.divider {
+  border: 0;
+  border-top: 1px solid #eee;
+  margin: 20px 0;
+}
+
+/* Yıldız Puanlama */
+.rating-section {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.rating-title {
+  font-size: 14px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.stars {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+}
+
+.star {
+  font-size: 40px;
+  color: #fdb103;
+  cursor: pointer;
+  transition: color 0.1s;
+  user-select: none;
+}
+
+.star.filled {
+  color: #ffc107;
+}
+
+/* Yorum Alanı */
+.comment-section {
+  margin-bottom: 15px;
+}
+
+.comment-header {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  font-weight: bold;
+  margin-bottom: 8px;
+}
+
+.criteria-link {
+  color: #666;
+  text-decoration: underline;
+}
+
+.textarea-container {
+  position: relative;
+}
+
+.comment-section textarea {
+  width: 100%;
+  height: 100px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  padding: 10px;
+  box-sizing: border-box;
+  font-family: inherit;
+  font-size: 13px;
+  resize: none;
+  background-color: #fafafa;
+}
+
+.char-count {
+  position: absolute;
+  bottom: 8px;
+  right: 10px;
+  font-size: 11px;
+  color: #999;
+}
+
+/* Onay Kutusu ve Yasal Uyarı */
+.checkbox-section {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  margin-bottom: 15px;
+}
+
+.checkbox-section input {
+  margin-top: 3px;
+}
+
+.checkbox-section label {
+  font-size: 12px;
+  color: #555;
+  line-height: 1.4;
+}
+
+.checkbox-section a {
+  color: #333;
+  text-decoration: underline;
+  font-weight: bold;
+}
+
+.legal-warning {
+  font-size: 12px;
+  color: #777;
+  line-height: 1.4;
+  margin-bottom: 20px;
+}
+
+/* Gönder Butonu */
+.btn-submit {
+  width: 100%;
+  background-color: #b5b5b5; /* Pasif renk */
+  color: #fff;
+  border: none;
+  padding: 12px;
+  font-size: 15px;
+  font-weight: bold;
+  border-radius: 6px;
+  cursor: not-allowed;
+  transition: background-color 0.2s;
+}
+
+.btn-submit.active {
+  background-color: #f27a1a; /* Aktif renk */
+  cursor: pointer;
+}

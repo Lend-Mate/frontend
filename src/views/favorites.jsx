@@ -10,6 +10,7 @@ import {
   deleteFavourite,
 } from "../services/favourite-service";
 import Toast from "../components/Toast";
+import { addToCart } from "../services/order-service";
 
 // S3 bucket base URL
 const S3_BASE = "https://lend-mate-bucket.s3.amazonaws.com";
@@ -177,6 +178,11 @@ export default function Favorites() {
     setCartCount((prev) => prev + 1);
     closeModal();
     showToast(`${product.productName} sepete eklendi!`);
+    const userId = getOwnerIdFromToken();
+    addToCart({ productId: product.id, userId }).catch(err => {
+      console.error("Sepete ürün eklenirken bir hata oluştu:", err)
+      showToast("Ürün sepette eklenirken bir hata oluştu.")
+    })
   };
 
   const sortedProducts = [...products];

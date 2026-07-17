@@ -9,6 +9,7 @@ import Advert from "./views/advert.jsx";
 import Profile from "./views/profile.jsx";
 import Auth from "./views/auth.jsx";
 import ProductDetail from "./views/product_detail.jsx";
+import RentalsPage from "./views/rentals.jsx";
 
 function PrivateRoute({ children }) {
   const token = localStorage.getItem("token");
@@ -28,6 +29,7 @@ ReactDOM.createRoot(root).render(
       <Route path="/advert" element={<PrivateRoute><Advert /></PrivateRoute>} />
       <Route path="/profile" element={<PrivateRoute><Profile /></PrivateRoute>} />
       <Route path="/product-detail" element={<PrivateRoute><ProductDetail /></PrivateRoute>} />
+      <Route path="/rentals" element={<PrivateRoute><RentalsPage /></PrivateRoute>} />
     </Routes>
   </BrowserRouter>
 );
