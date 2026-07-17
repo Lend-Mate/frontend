@@ -263,6 +263,21 @@ body {
   letter-spacing: 0.3px;
 }
 
+.rent-btn-rented {
+  width: 100%;
+  padding: 15px;
+  background: #e53935;
+  color: #fff;
+  border: none;
+  cursor: not-allowed;
+  border-radius: 50px;
+  font-size: 1.05rem;
+  font-weight: 700;
+  font-family: inherit;
+  transition: background 0.2s, transform 0.1s;
+  letter-spacing: 0.3px;
+}
+
 .rent-btn:hover { background: #2fad58; }
 .rent-btn:active { transform: scale(0.98); }
 

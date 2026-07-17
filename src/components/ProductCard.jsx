@@ -9,7 +9,7 @@ export default function ProductCard({ product, openModal, toggleWish, getImageUr
   return (
     <div 
       className={`product-card ${isRented ? 'rented' : ''}`} 
-      onClick={() => !isRented && openModal(product)} // Eğer kiralandıysa tıklanıp modal açılmasın
+      onClick={() => openModal(product)} // Eğer kiralandıysa tıklanıp modal açılmasın
     >
       {/* RENTED Çapraz Yazı Katmanı */}
       {isRented && (

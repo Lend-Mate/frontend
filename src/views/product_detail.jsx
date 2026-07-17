@@ -44,6 +44,7 @@ const formatDate = (dateString) => {
 /* ── Ana Bileşen ─────────────────────────── */
 export default function ProductDetail() {
   const [product, setProduct] = useState(null);
+  const [isRented, setIsRented] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [selectedPeriod, setSelectedPeriod] = useState(24);
   const [activeImg, setActiveImg] = useState(0);
@@ -62,6 +63,7 @@ export default function ProductDetail() {
       getProductById(productId)
         .then((data) => {
           setProduct(data);
+          setIsRented(data.stockQuantity === 0);
           setIsLoading(false);
         })
         .catch((err) => {
@@ -225,7 +227,14 @@ export default function ProductDetail() {
             </div>
 
             {/* CTA */}
-            <button className="rent-btn" onClick={() => handleRent(product)}>Kirala</button>
+            <button className={isRented ? "rent-btn-rented" : "rent-btn"} onClick={() => {
+              if (isRented) {
+                return;
+              }
+              handleRent(product)
+            }}>
+              {isRented ? "Kiralandı" : "Kirala"}
+            </button>
           </div>
         </div>
 

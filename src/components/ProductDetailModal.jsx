@@ -2,9 +2,11 @@ import { useEffect, useState } from "react";
 
 export default function ProductModal({ product, getImageUrl, closeModal, handleRent }) {
   const [selectedImage, setSelectedImage] = useState(null);
-
+  const [isRented, setIsRented] = useState(false);
   useEffect(() => {
     if (!product) return;
+
+    setIsRented(product.stockQuantity === 0);
     const defaultImage = (product.images?.find((img) => img.isPrimary) || product.images?.[0])?.imageUrl;
     setSelectedImage(defaultImage || null);
   }, [product]);
@@ -74,7 +76,7 @@ export default function ProductModal({ product, getImageUrl, closeModal, handleR
                 }}>
                 <span style={{color: "black"}}>Detay</span>
               </button>
-              <button type="button" className="modal-rent-btn" onClick={() => handleRent(product)}>
+              <button style={{display: isRented ? "none" : ""}} type="button" className="modal-rent-btn" onClick={() => handleRent(product)}>
                 Kirala
               </button>
             </div>
