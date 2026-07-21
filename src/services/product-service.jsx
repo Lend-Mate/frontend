@@ -1,4 +1,4 @@
-import {productApi} from "./api";
+import { productApi } from "./api";
 
 export const getAllProducts = async ({
   page = 0,
@@ -110,6 +110,50 @@ export const getUniqueBrands = async ({
       minRentalDays,
       maxRentalDays,
     }
+  });
+  return response.data;
+};
+
+export const getAllProductsByOwnerId = async ({
+  page = 0,
+  size = 5,
+  sortBy = "id",
+  ascending = true,
+  ownerId,
+} = {}) => {
+  const response = await productApi.get(`/products/user`, {
+    params: {
+      page,
+      size,
+      sortBy,
+      ascending,
+      ownerId
+    },
+  });
+
+  return response.data.content;
+};
+
+export const createAvailability = async ({
+  productId,
+  startDate,
+  endDate,
+  reason,
+} = {}) => {
+  const response = await productApi.post(`/product-availability`, {
+    productId,
+    startDate,
+    endDate,
+    reason
+  });
+  return response.data;
+};
+
+export const deleteAvailability = async (id) => {
+  const response = await productApi.delete(`/product-availability`, {
+    params: {
+      id
+    },
   });
   return response.data;
 };

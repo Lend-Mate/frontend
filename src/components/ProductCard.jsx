@@ -1,7 +1,7 @@
 import { getOwnerIdFromToken } from "../services/auth-service"
 import { addFavourite } from "../services/favourite-service"
 
-export default function ProductCard({ product, openModal, toggleWish, getImageUrl, isWished }) {
+export default function ProductCard({ product, openModal, toggleWish, getImageUrl, isWished, isNew = false }) {
   const quantity = product.stockQuantity;
   const isRented = quantity === 0; // Stok 0 ise kiralanmıştır
   const primaryImage = product.images?.find(img => img.isPrimary) || product.images?.[0]
@@ -18,7 +18,9 @@ export default function ProductCard({ product, openModal, toggleWish, getImageUr
         </div>
       )}
 
-      <span className="product-badge">Yeni</span>
+      {isNew && (
+        <span className="product-badge">Yeni</span>
+      )}
       <button
         type="button"
         className={`product-wish ${isWished ? 'active' : ''}`}

@@ -116,6 +116,24 @@ export default function Header({ categories = [], wishlistCount = 0, cartCount =
                   <button
                     type="button"
                     onClick={() => {
+                      window.location.href = "/my-products"
+                    }}
+                    style={{
+                      width: "100%",
+                      textAlign: "left",
+                      padding: "12px 14px",
+                      border: "none",
+                      background: "transparent",
+                      cursor: "pointer",
+                      fontSize: 14,
+                      color: "#111",
+                    }}
+                  >
+                    Ürünlerim
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
                       window.location.href = "/rentals"
                     }}
                     style={{

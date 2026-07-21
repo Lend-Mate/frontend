@@ -233,7 +233,7 @@ export default function ProductDetail() {
               }
               handleRent(product)
             }}>
-              {isRented ? "Kiralandı" : "Kirala"}
+              {isRented ? "Kiralandı" : "Sepete Ekle"}
             </button>
           </div>
         </div>

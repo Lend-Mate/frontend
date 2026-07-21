@@ -77,7 +77,7 @@ export default function ProductModal({ product, getImageUrl, closeModal, handleR
                 <span style={{color: "black"}}>Detay</span>
               </button>
               <button style={{display: isRented ? "none" : ""}} type="button" className="modal-rent-btn" onClick={() => handleRent(product)}>
-                Kirala
+                Sepete Ekle
               </button>
             </div>
           </div>

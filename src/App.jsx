@@ -151,6 +151,7 @@ function App() {
                 toggleWish={toggleWish}
                 getImageUrl={getImageUrl}
                 isWished={wishlist.has(product.id)}
+                isNew = {true}
               />
             ))}
           </div>
