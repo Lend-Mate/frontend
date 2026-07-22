@@ -6,7 +6,7 @@ import { getFavoritesByUser } from "../services/product-service"
 
 const DEFAULT_NAV_LINKS = [
   { href: "/products", label: "Tüm Ürünler" },
-  { href: "/products?sale=true", label: "İndirimli Ürünler", badge: "Yakında" }
+  { href: "/products?sale=true", label: "İndirimli Ürünler", badge: "Yakında", disabled: true }
 ]
 
 export default function Header({ categories = [] }) {
@@ -135,7 +135,7 @@ export default function Header({ categories = [] }) {
                     }}
                   >
                     Profil
-                    <span className="coming-soon-badge" style={{marginLeft: "6px"}}>
+                    <span className="coming-soon-badge" style={{ marginLeft: "6px" }}>
                       Yakında
                     </span>
                   </button>
@@ -247,7 +247,22 @@ export default function Header({ categories = [] }) {
               </a>
             )}
             {DEFAULT_NAV_LINKS.map((link) => (
-              <a key={link.href} href={link.href} style={{ position: "relative", display: "inline-flex", alignItems: "center", gap: "6px" }}>
+              <a
+                key={link.href}
+                href={link.disabled ? "#" : link.href}
+                onClick={(e) => {
+                  if (link.disabled) {
+                    e.preventDefault()
+                  }
+                }}
+                style={{
+                  position: "relative",
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: "6px",
+                  cursor: link.disabled ? "default" : "pointer"
+                }}
+              >
                 {link.label}
                 {link.badge && (
                   <span className="coming-soon-badge">
