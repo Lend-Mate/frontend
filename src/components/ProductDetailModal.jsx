@@ -49,12 +49,26 @@ export default function ProductModal({ product, getImageUrl, closeModal, handleR
               <span className="modal-price">
                 {Number(product.price).toLocaleString('tr-TR')} {product.currency}
               </span>
-              <span className="modal-price-label">/ Günlük</span>
+              <span className="modal-price-label">/ Aylık Ödenecek Tutar</span>
             </div>
 
             <div className="modal-badges">
               <div className="modal-badge-row">
-                <i className="fas fa-calendar-alt" /> {product.minRentalDays}–{product.maxRentalDays} gün arası kiralama
+                <i className="fas fa-calendar-alt" /> Kiralama Seçenekleri: {
+                  product.rentalPeriodPrices ? (
+                    Object.keys(product.rentalPeriodPrices)
+                      .map(period => {
+                        const periodMap = {
+                          THREE_MONTH: '3 Ay',
+                          SIX_MONTH: '6 Ay',
+                          NINE_MONTH: '9 Ay',
+                          TWELVE_MONTH: '12 Ay'
+                        };
+                        return periodMap[period] || period;
+                      })
+                      .join(', ')
+                  ) : ''
+                }
               </div>
               <div className="modal-badge-row">
                 <i className="fas fa-shield-alt" /> Depozito: {Number(product.depositAmount).toLocaleString('tr-TR')} {product.currency}
@@ -69,14 +83,14 @@ export default function ProductModal({ product, getImageUrl, closeModal, handleR
 
             <div style={{ display: 'flex', gap: '10px', marginTop: '20px' }}>
               <button style={{
-                background: "white", 
+                background: "white",
                 border: "1px solid #ccc",
-                }} type="button" className="modal-rent-btn" onClick={() => {
-                  window.location.href = `/product-detail?productId=${product.id}`
-                }}>
-                <span style={{color: "black"}}>Detay</span>
+              }} type="button" className="modal-rent-btn" onClick={() => {
+                window.location.href = `/product-detail?productId=${product.id}`
+              }}>
+                <span style={{ color: "black" }}>Detay</span>
               </button>
-              <button style={{display: isRented ? "none" : ""}} type="button" className="modal-rent-btn" onClick={() => handleRent(product)}>
+              <button style={{ display: isRented ? "none" : "" }} type="button" className="modal-rent-btn" onClick={() => handleRent(product)}>
                 Sepete Ekle
               </button>
             </div>

@@ -7,8 +7,8 @@ export default function ProductCard({ product, openModal, toggleWish, getImageUr
   const primaryImage = product.images?.find(img => img.isPrimary) || product.images?.[0]
 
   return (
-    <div 
-      className={`product-card ${isRented ? 'rented' : ''}`} 
+    <div
+      className={`product-card ${isRented ? 'rented' : ''}`}
       onClick={() => openModal(product)} // Eğer kiralandıysa tıklanıp modal açılmasın
     >
       {/* RENTED Çapraz Yazı Katmanı */}
@@ -51,14 +51,31 @@ export default function ProductCard({ product, openModal, toggleWish, getImageUr
         <div className="product-specs">{product.description}</div>
 
         <div className="duration-pills">
-          <span className="pill active">
-            {product.minRentalDays}–{product.maxRentalDays} Gün
-          </span>
+          {product.rentalPeriodPrices ? (
+            Object.keys(product.rentalPeriodPrices)
+            .map((period, index) => {
+              // Örn: "SIX_MONTH" -> 6 Ay, "TWELVE_MONTH" -> 12 Ay
+              const periodMap = {
+                ONE_MONTH: '1 Ay',
+                THREE_MONTH: '3 Ay',
+                SIX_MONTH: '6 Ay',
+                NINE_MONTH: '9 Ay',
+                TWELVE_MONTH: '12 Ay'
+              };
+              return (
+                <span key={index} className="pill active">
+                  {periodMap[period] || period}
+                </span>
+              );
+            })
+          ) : (
+            <span className="pill active"></span>
+          )}
         </div>
 
         <div className="product-price">
           {Number(product.price).toLocaleString('tr-TR')} {product.currency}
-          <span> / Günlük</span>
+          <span> / Aylık Ödenecek Tutar</span>
         </div>
       </div>
     </div>

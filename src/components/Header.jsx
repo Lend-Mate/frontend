@@ -1,14 +1,19 @@
 import "../App.css"
 import { useEffect, useRef, useState } from "react"
+import { getOwnerIdFromToken } from "../services/auth-service"
+import { getCartsByUser } from "../services/order-service"
+import { getFavoritesByUser } from "../services/product-service"
 
 const DEFAULT_NAV_LINKS = [
   { href: "/products", label: "Tüm Ürünler" },
   { href: "/products?sale=true", label: "İndirimli Ürünler" }
 ]
 
-export default function Header({ categories = [], wishlistCount = 0, cartCount = 0 }) {
+export default function Header({ categories = [] }) {
   const [isCatsDropdownOpen, setIsCatsDropdownOpen] = useState(false)
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false)
+  const [wishlistCount, setWishlistCount] = useState(0)
+  const [cartCount, setCartCount] = useState(0)
   const dropdownRef = useRef(null)
   const profileMenuTimer = useRef(null)
 
@@ -38,6 +43,25 @@ export default function Header({ categories = [], wishlistCount = 0, cartCount =
     }, 100)
   }
 
+  const setFavoritesCountFunction = async () => {
+    const userId = getOwnerIdFromToken();
+    const data = await getFavoritesByUser(userId)
+    const count = data.length;
+    setWishlistCount(count)
+  }
+
+  const setCartsCountFunction = async () => {
+    const userId = getOwnerIdFromToken();
+    const data = await getCartsByUser(userId);
+    const count = data.length;
+    setCartCount(count)
+  }
+
+  useEffect(() => {
+    setFavoritesCountFunction();
+    setCartsCountFunction();
+  }, []);
+
   return (
     <>
       <header className="header">
@@ -45,15 +69,15 @@ export default function Header({ categories = [], wishlistCount = 0, cartCount =
           <a href="/" className="logo">
             <span className="logo-icon">+</span>lendmate
           </a>
-          
-              <div className="search-bar">
-                
-                <i className="fas fa-search" />
-                <form onSubmit={handleSearchSubmitByElastic} style={{ width: "100%" }}>
-                <input type="text" name="searchText" placeholder="Ürün, kategori veya marka ara" />
-               </form>
-              </div>
-         
+
+          <div className="search-bar">
+
+            <i className="fas fa-search" />
+            <form onSubmit={handleSearchSubmitByElastic} style={{ width: "100%" }}>
+              <input type="text" name="searchText" placeholder="Ürün, kategori veya marka ara" />
+            </form>
+          </div>
+
           <button
             type="button"
             className="create-listing-btn"
@@ -210,7 +234,7 @@ export default function Header({ categories = [], wishlistCount = 0, cartCount =
             </button>
           </div>
           <div>
-             {categories.slice(0, 4).map((cat) => (
+            {categories.slice(0, 4).map((cat) => (
               <a key={cat.id} href={`/products?categoryId=${cat.id}`}>
                 {cat.categoryName}
               </a>
@@ -225,7 +249,7 @@ export default function Header({ categories = [], wishlistCount = 0, cartCount =
                 {link.label}
               </a>
             ))}
-           
+
           </div>
         </div>
       </nav>

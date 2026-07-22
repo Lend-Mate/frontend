@@ -157,3 +157,8 @@ export const deleteAvailability = async (id) => {
   });
   return response.data;
 };
+
+export const getFavoritesByUser = async (id) => {
+  const response = await productApi.get(`/favourites/user/${id}`);
+  return response.data;
+};

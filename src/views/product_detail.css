@@ -103,7 +103,7 @@ body {
   background: none;
   border: none;
   cursor: pointer;
-  color: #bbb;
+  color: black;
   font-size: 1.3rem;
   transition: color 0.2s;
 }

@@ -29,27 +29,30 @@ const getAvatarColor = (userId) => {
 
 /* ── Tarih Formatlayıcı ────────────────────────── */
 const formatDate = (dateString) => {
-
-  return dateString;
-
   if (!dateString) return "";
   const date = new Date(dateString);
   return date.toLocaleDateString("tr-TR", {
     day: "numeric",
-    month: "Long",
+    month: "long",
     year: "numeric",
   });
 };
 
-/* ── Ana Bileşen ─────────────────────────── */
+/* ── Kiralama Dönemi Haritası ve Yardımcı Fonksiyonlar ────── */
+const PERIOD_MAP = {
+  ONE_MONTH: { label: "1 Ay", months: 1 },
+  THREE_MONTH: { label: "3 Ay", months: 3 },
+  SIX_MONTH: { label: "6 Ay", months: 6 },
+  NINE_MONTH: { label: "9 Ay", months: 9 },
+  TWELVE_MONTH: { label: "12 Ay", months: 12 },
+};
+
 export default function ProductDetail() {
   const [product, setProduct] = useState(null);
   const [isRented, setIsRented] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-  const [selectedPeriod, setSelectedPeriod] = useState(24);
+  const [selectedPeriod, setSelectedPeriod] = useState(null);
   const [activeImg, setActiveImg] = useState(0);
-  const [repairChecked, setRepairChecked] = useState(false);
-  const [wishlist, setWishlist] = useState(false);
   const [isWished, setIsWished] = useState(false);
   const [cartCount, setCartCount] = useState(0);
   const [toast, setToast] = useState("");
@@ -64,6 +67,15 @@ export default function ProductDetail() {
         .then((data) => {
           setProduct(data);
           setIsRented(data.stockQuantity === 0);
+          
+          // İlk mevcut periyodu seçili hale getir
+          if (data.rentalPeriodPrices) {
+            const periods = Object.keys(data.rentalPeriodPrices);
+            if (periods.length > 0) {
+              setSelectedPeriod(periods[0]);
+            }
+          }
+          
           setIsLoading(false);
         })
         .catch((err) => {
@@ -73,16 +85,15 @@ export default function ProductDetail() {
     }
   }, [productId]);
 
-
   const handleRent = (product) => {
-    setCartCount(prev => prev + 1)
-    showToast(`${product.productName} sepete eklendi!`)
+    setCartCount(prev => prev + 1);
+    showToast(`${product.productName} sepete eklendi!`);
     const userId = getOwnerIdFromToken();
     addToCart({ productId: product.id, userId }).catch(err => {
-      console.error("Sepete ürün eklenirken bir hata oluştu:", err)
-      showToast("Ürün sepette eklenirken bir hata oluştu.")
-    })
-  }
+      console.error("Sepete ürün eklenirken bir hata oluştu:", err);
+      showToast("Ürün sepette eklenirken bir hata oluştu.");
+    });
+  };
 
   function showToast(msg) {
     setToast(msg);
@@ -90,11 +101,11 @@ export default function ProductDetail() {
   }
 
   if (isLoading) {
-    return <div style={{ textAlignment: "center", padding: "50px" }}>Yükleniyor...</div>;
+    return <div style={{ textAlign: "center", padding: "50px" }}>Yükleniyor...</div>;
   }
 
   if (!product) {
-    return <div style={{ textAlignment: "center", padding: "50px" }}>Ürün bulunamadı.</div>;
+    return <div style={{ textAlign: "center", padding: "50px" }}>Ürün bulunamadı.</div>;
   }
 
   // API'den gelen yorumlar
@@ -112,38 +123,38 @@ export default function ProductDetail() {
     totalRatingSum += c.rating;
   });
 
-  const avgRating = totalReviews > 0 ? (totalRatingSum / totalReviews).toFixed(1) : 0;
+  // Seçili dönemin fiyatı (varsayılan olarak ürünün taban fiyatı düşülür)
+  const currentPrice = selectedPeriod && product.rentalPeriodPrices?.[selectedPeriod] 
+    ? product.rentalPeriodPrices[selectedPeriod] 
+    : product.price;
 
-  // Dönemlere göre fiyat simülasyonu (Gelen temel fiyatı baz alır)
-  const simulatedPrices = {
-    3: product.price * 1.5,
-    6: product.price * 1.3,
-    12: product.price * 1.1,
-    24: product.price,
-  };
+  // Kiralama seçenekleri dizisi (12 Ay, 9 Ay, 6 Ay şeklinde büyükten küçüğe sıralı)
+  const availablePeriods = product.rentalPeriodPrices
+    ? Object.keys(product.rentalPeriodPrices)
+    : [];
 
-  // Mock (Sabit) Veriler (API'de karşılığı olmayan kısımlar için)
-  const mockData = {
-    repairExtra: 1871.10,
-    technicalSpecs: [
-      { key: "Dahili Hafıza", value: "256 GB" },
-      { key: "Min. Kiralama", value: `${product.minRentalDays} Gün` },
-      { key: "Maks. Kiralama", value: `${product.maxRentalDays} Gün` },
-      { key: "Depozito Tutar", value: `${product.depositAmount} ${product.currency}` },
-    ],
-    technicalSpecsRight: [
-      { key: "Stok Adedi", value: product.stockQuantity },
-      { key: "Para Birimi", value: product.currency },
-      { key: "Kamera Çözünürlüğü", value: "48 MP" },
-      { key: "Yüz Tanıma", value: "Evet" },
-    ],
-    variants: ["Siyah", "Sarı", "Yeşil", "Mavi"],
-  };
+  const periodLabelsText = availablePeriods
+    .map(p => PERIOD_MAP[p]?.label || p)
+    .join(", ");
+
+  // Teknik Özellikler
+  const technicalSpecs = [
+    { key: "Dahili Hafıza", value: "256 GB" },
+    { key: "Kiralama Seçenekleri", value: periodLabelsText || "Aylık" },
+    { key: "Depozito Tutar", value: `${product.depositAmount} ${product.currency}` },
+  ];
+
+  const technicalSpecsRight = [
+    { key: "Stok Adedi", value: product.stockQuantity },
+    { key: "Para Birimi", value: product.currency },
+    { key: "Kamera Çözünürlüğü", value: "48 MP" },
+    { key: "Yüz Tanıma", value: "Evet" },
+  ];
 
   // Görsel dizisini güvenli bir şekilde alma
   const productImages = product.images && product.images.length > 0
     ? product.images.map(img => IMAGE_PREFIX + img.imageUrl)
-    : ["https://via.placeholder.com/512"]; // Fallback görsel
+    : ["https://via.placeholder.com/512"];
 
   return (
     <div>
@@ -173,10 +184,7 @@ export default function ProductDetail() {
 
           {/* Purchase panel */}
           <div className="purchase-panel">
-
-
             <div>
-
               <div style={{ display: "flex", alignItems: "center", gap: 8, justifyContent: "space-between" }}>
                 <div className="product-title">{product.productName}</div>
                 <button style={{ background: "none", border: "none", cursor: "pointer" }} onClick={() => {
@@ -192,23 +200,25 @@ export default function ProductDetail() {
 
             <div className="price-block">
               <span className="price-amount">
-                {simulatedPrices[selectedPeriod].toLocaleString("tr-TR")} {product.currency}
+                {Number(currentPrice).toLocaleString("tr-TR")} {product.currency}
               </span>
               <span className="price-label">/ Aylık ödenecek tutar</span>
             </div>
 
             {/* Period selector */}
-            <div className="period-selector">
-              {[3, 6, 12, 24].map((p) => (
-                <button
-                  key={p}
-                  className={`period-btn ${selectedPeriod === p ? "active" : ""}`}
-                  onClick={() => setSelectedPeriod(p)}
-                >
-                  {p} Ay
-                </button>
-              ))}
-            </div>
+            {availablePeriods.length > 0 && (
+              <div className="period-selector">
+                {availablePeriods.map((periodKey) => (
+                  <button
+                    key={periodKey}
+                    className={`period-btn ${selectedPeriod === periodKey ? "active" : ""}`}
+                    onClick={() => setSelectedPeriod(periodKey)}
+                  >
+                    {PERIOD_MAP[periodKey]?.label || periodKey}
+                  </button>
+                ))}
+              </div>
+            )}
 
             {/* Features */}
             <div className="feature-list">
@@ -231,7 +241,7 @@ export default function ProductDetail() {
               if (isRented) {
                 return;
               }
-              handleRent(product)
+              handleRent(product);
             }}>
               {isRented ? "Kiralandı" : "Sepete Ekle"}
             </button>
@@ -243,7 +253,7 @@ export default function ProductDetail() {
           <div className="section-title">Ürün Özellikleri</div>
           <div className="specs-grid">
             <div className="specs-col">
-              {mockData.technicalSpecs.map((s) => (
+              {technicalSpecs.map((s) => (
                 <div key={s.key} className="spec-row">
                   <span className="spec-key">{s.key}</span>
                   <span className="spec-val">{s.value}</span>
@@ -251,7 +261,7 @@ export default function ProductDetail() {
               ))}
             </div>
             <div className="specs-col">
-              {mockData.technicalSpecsRight.map((s) => (
+              {technicalSpecsRight.map((s) => (
                 <div key={s.key} className="spec-row">
                   <span className="spec-key">{s.key}</span>
                   <span className="spec-val">{s.value}</span>
@@ -303,7 +313,7 @@ export default function ProductDetail() {
               <div className="review-list">
                 {comments.length > 0 ? (
                   comments.map((r) => {
-                    const initials = `U${r.userId}`; // API'den isim gelmediği için Kullanıcı ID yazıldı
+                    const initials = `U${r.userId}`;
                     return (
                       <div key={r.id} className="review-item">
                         <div className="review-top">
