@@ -225,6 +225,9 @@ function CartSummary({ items }) {
           <IconGift />
         </div>
         <span className="campaign-label">Kampanya Seç</span>
+        <span className="coming-soon-badge" style={{ marginLeft: "6px" }}>
+          Yakında
+        </span>
         <span className="campaign-arrow">›</span>
       </div>
 
@@ -362,7 +365,7 @@ export default function ShoppingCart() {
             : item.product?.price;
 
           const monthsToAdd = PERIOD_MAP[item.period]?.months || 1;
-          
+
           const endDateObj = new Date(now);
           endDateObj.setMonth(endDateObj.getMonth() + monthsToAdd);
 
