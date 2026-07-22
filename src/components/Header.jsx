@@ -6,7 +6,7 @@ import { getFavoritesByUser } from "../services/product-service"
 
 const DEFAULT_NAV_LINKS = [
   { href: "/products", label: "Tüm Ürünler" },
-  { href: "/products?sale=true", label: "İndirimli Ürünler" }
+  { href: "/products?sale=true", label: "İndirimli Ürünler", badge: "Yakında" }
 ]
 
 export default function Header({ categories = [] }) {
@@ -46,14 +46,14 @@ export default function Header({ categories = [] }) {
   const setFavoritesCountFunction = async () => {
     const userId = getOwnerIdFromToken();
     const data = await getFavoritesByUser(userId)
-    const count = data.length;
+    const count = data ? data.length : 0;
     setWishlistCount(count)
   }
 
   const setCartsCountFunction = async () => {
     const userId = getOwnerIdFromToken();
     const data = await getCartsByUser(userId);
-    const count = data.length;
+    const count = data ? data.length : 0;
     setCartCount(count)
   }
 
@@ -71,7 +71,6 @@ export default function Header({ categories = [] }) {
           </a>
 
           <div className="search-bar">
-
             <i className="fas fa-search" />
             <form onSubmit={handleSearchSubmitByElastic} style={{ width: "100%" }}>
               <input type="text" name="searchText" placeholder="Ürün, kategori veya marka ara" />
@@ -122,7 +121,7 @@ export default function Header({ categories = [] }) {
                   <button
                     type="button"
                     onClick={() => {
-                      window.location.href = "/profile"
+                      //window.location.href = "/profile"
                     }}
                     style={{
                       width: "100%",
@@ -136,6 +135,9 @@ export default function Header({ categories = [] }) {
                     }}
                   >
                     Profil
+                    <span className="coming-soon-badge" style={{marginLeft: "6px"}}>
+                      Yakında
+                    </span>
                   </button>
                   <button
                     type="button"
@@ -245,11 +247,15 @@ export default function Header({ categories = [] }) {
               </a>
             )}
             {DEFAULT_NAV_LINKS.map((link) => (
-              <a key={link.href} href={link.href}>
+              <a key={link.href} href={link.href} style={{ position: "relative", display: "inline-flex", alignItems: "center", gap: "6px" }}>
                 {link.label}
+                {link.badge && (
+                  <span className="coming-soon-badge">
+                    {link.badge}
+                  </span>
+                )}
               </a>
             ))}
-
           </div>
         </div>
       </nav>
