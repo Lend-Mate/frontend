@@ -7,6 +7,15 @@ import { getOwnerIdFromToken } from "../services/auth-service";
 import "./advert_css.css";
 import { IMAGE_PREFIX } from "../constants";
 
+// Kiralama periyotları sabit listesi
+const RENTAL_PERIOD_OPTIONS = [
+  { value: "ONE_MONTH", label: "1 Ay" },
+  { value: "THREE_MONTH", label: "3 Ay" },
+  { value: "SIX_MONTH", label: "6 Ay" },
+  { value: "NINE_MONTH", label: "9 Ay" },
+  { value: "TWELVE_MONTH", label: "12 Ay" },
+];
+
 export default function Advert() {
   const navigate = useNavigate();
   const [categories, setCategories] = useState([]);
@@ -17,8 +26,7 @@ export default function Advert() {
   const [price, setPrice] = useState("");
   const [brand, setBrand] = useState("");
   const [stockQuantity, setStockQuantity] = useState("");
-  const [minRentalDays, setMinRentalDays] = useState("");
-  const [maxRentalDays, setMaxRentalDays] = useState("");
+  const [availablePeriods, setAvailablePeriods] = useState([]);
   const [depositAmount, setDepositAmount] = useState("");
   const [city, setCity] = useState("");
   const [district, setDistrict] = useState("");
@@ -62,12 +70,20 @@ export default function Advert() {
         filesToUpload.map((file) => uploadFileToS3(file))
       );
       setUploadedImages((prev) => [...prev, ...uploaded]);
-      //setMessage(`${uploaded.length} fotoğraf yüklendi.`);
     } catch (err) {
       setMessage(err.message || "Fotoğraf yüklenirken hata oluştu.");
     } finally {
       setUploading(false);
     }
+  };
+
+  // Kiralama dönemi ekleme/çıkarma işlemi
+  const togglePeriod = (periodValue) => {
+    setAvailablePeriods((prev) =>
+      prev.includes(periodValue)
+        ? prev.filter((p) => p !== periodValue)
+        : [...prev, periodValue]
+    );
   };
 
   const isSubmittable =
@@ -78,8 +94,8 @@ export default function Advert() {
     price !== "" &&
     depositAmount !== "" &&
     stockQuantity !== "" &&
-    minRentalDays !== "" &&
-    maxRentalDays !== "" &&
+    stockQuantity !== "0" &&
+    availablePeriods.length > 0 &&
     uploadedImages.length > 0;
 
   const handleSubmit = async () => {
@@ -103,8 +119,7 @@ export default function Advert() {
         price: Number(price),
         brand: brand.trim() || undefined,
         stockQuantity: Number(stockQuantity),
-        minRentalDays: minRentalDays ? Number(minRentalDays) : undefined,
-        maxRentalDays: maxRentalDays ? Number(maxRentalDays) : undefined,
+        availablePeriods,
         depositAmount: Number(depositAmount),
       };
 
@@ -127,8 +142,6 @@ export default function Advert() {
     }
   };
 
-
-  console.log({isSubmittable, submitLoading, termsAccepted, categoryId, productName, description, price, depositAmount, stockQuantity})
   return (
     <div className="page-wrapper">
       <Header categories={categories} wishlistCount={wishlist.size} cartCount={cartCount} />
@@ -235,38 +248,50 @@ export default function Advert() {
                 <input
                   className="form-input"
                   type="number"
-                  min="0"
+                  min="1"
                   value={stockQuantity}
                   onChange={(e) => setStockQuantity(e.target.value)}
                 />
               </div>
             </div>
 
-            <div className="form-row">
-              <div className="form-group">
-                <div className="form-label">
-                  Min. Kiralama Günü <span className="required-star">*</span>
-                </div>
-                <input
-                  className="form-input"
-                  type="number"
-                  min="1"
-                  value={minRentalDays}
-                  onChange={(e) => setMinRentalDays(e.target.value)}
-                />
+            {/* Çoklu Kiralama Dönemi Seçimi (Chips Yapısı) */}
+            <div className="form-group">
+              <div className="form-label">
+                Uygun Kiralama Dönemleri <span className="required-star">*</span>
               </div>
-
-              <div className="form-group">
-                <div className="form-label">
-                  Max. Kiralama Günü <span className="required-star">*</span>
-                </div>
-                <input
-                  className="form-input"
-                  type="number"
-                  min="1"
-                  value={maxRentalDays}
-                  onChange={(e) => setMaxRentalDays(e.target.value)}
-                />
+              <div
+                style={{
+                  display: "flex",
+                  flexWrap: "wrap",
+                  gap: "10px",
+                  marginTop: "6px",
+                }}
+              >
+                {RENTAL_PERIOD_OPTIONS.map((option) => {
+                  const isSelected = availablePeriods.includes(option.value);
+                  return (
+                    <button
+                      key={option.value}
+                      type="button"
+                      onClick={() => togglePeriod(option.value)}
+                      style={{
+                        padding: "8px 16px",
+                        borderRadius: "20px",
+                        border: isSelected ? "2px solid #3b82f6" : "1px solid #d1d5db",
+                        backgroundColor: isSelected ? "#eff6ff" : "#fff",
+                        color: isSelected ? "#1d4ed8" : "#374151",
+                        fontWeight: isSelected ? "600" : "400",
+                        cursor: "pointer",
+                        fontSize: "14px",
+                        transition: "all 0.2s ease",
+                      }}
+                    >
+                      {isSelected ? "✓ " : "+ "}
+                      {option.label}
+                    </button>
+                  );
+                })}
               </div>
             </div>
 
@@ -337,7 +362,9 @@ export default function Advert() {
         </div>
 
         <div>
-          <div className="section-title">Fotoğraf <span className="required-star">*</span></div>
+          <div className="section-title">
+            Fotoğraf <span className="required-star">*</span>
+          </div>
           <div className="card">
             <div className="photo-upload-row">
               <label className="upload-box">
@@ -360,7 +387,7 @@ export default function Advert() {
 
             <div className="photo-count-row">
               <span className="photo-count-label">
-                Eklediğiniz Fotoğraf Adedi{' '}
+                Eklediğiniz Fotoğraf Adedi{" "}
                 <span className="photo-count-num">{uploadedImages.length}/5</span>
               </span>
             </div>

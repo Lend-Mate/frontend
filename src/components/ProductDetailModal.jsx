@@ -59,6 +59,7 @@ export default function ProductModal({ product, getImageUrl, closeModal, handleR
                     Object.keys(product.rentalPeriodPrices)
                       .map(period => {
                         const periodMap = {
+                          ONE_MONTH: '1 Ay',
                           THREE_MONTH: '3 Ay',
                           SIX_MONTH: '6 Ay',
                           NINE_MONTH: '9 Ay',
