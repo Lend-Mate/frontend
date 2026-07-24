@@ -107,14 +107,14 @@ export default function Favorites() {
 
         // Kalpler dolu gelsin
         setWishlist(
-          new Set(prods.map((fav) => fav.productResponse.id))
+          new Set(prods.map((fav) => fav.product.id))
         );
 
         // productId -> favouriteId map'i
         const map = {};
 
         prods.forEach((fav) => {
-          map[fav.productResponse.id] = fav.id;
+          map[fav.product.id] = fav.id;
         });
 
         setFavouriteMap(map);
@@ -159,7 +159,7 @@ export default function Favorites() {
         });
 
         setAllProducts((prev) =>
-          prev.filter((fav) => fav.productResponse.id !== productId)
+          prev.filter((fav) => fav.product.id !== productId)
         );
 
         showToast("Favorilerden kaldırıldı.");
@@ -188,13 +188,13 @@ export default function Favorites() {
 
   if (sortBy === "asc") {
     sortedProducts.sort(
-      (a, b) => Number(a.productResponse.price) - Number(b.productResponse.price)
+      (a, b) => Number(a.product.price) - Number(b.product.price)
     );
   }
 
   if (sortBy === "desc") {
     sortedProducts.sort(
-      (a, b) => Number(b.productResponse.price) - Number(a.productResponse.price)
+      (a, b) => Number(b.product.price) - Number(a.product.price)
     );
   }
 
@@ -374,13 +374,13 @@ export default function Favorites() {
             <div style={s.productsGrid(viewMode === "list")}>
               {sortedProducts.map((favourite) => (
                 <ProductCard
-                  key={favourite.productResponse.id}
-                  product={favourite.productResponse}
+                  key={favourite.product.id}
+                  product={favourite.product}
                   openModal={openModal}
                   toggleWish={toggleWish}
                   getImageUrl={getImageUrl}
                   isWished={wishlist.has(
-                    favourite.productResponse.id
+                    favourite.product.id
                   )}
                 />
               ))}
