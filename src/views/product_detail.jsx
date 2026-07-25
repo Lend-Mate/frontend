@@ -38,7 +38,7 @@ const formatDate = (dateString) => {
   });
 };
 
-/* ── Kiralama Dönemi Haritası ve Yardımcı Fonksiyonlar ────── */
+/* ── Kiralama Dönemi Haritası ────── */
 const PERIOD_MAP = {
   ONE_MONTH: { label: "1 Ay", months: 1 },
   THREE_MONTH: { label: "3 Ay", months: 3 },
@@ -67,7 +67,7 @@ export default function ProductDetail() {
         .then((data) => {
           setProduct(data);
           setIsRented(data.stockQuantity === 0);
-          
+
           // İlk mevcut periyodu seçili hale getir
           if (data.rentalPeriodPrices) {
             const periods = Object.keys(data.rentalPeriodPrices);
@@ -75,7 +75,7 @@ export default function ProductDetail() {
               setSelectedPeriod(periods[0]);
             }
           }
-          
+
           setIsLoading(false);
         })
         .catch((err) => {
@@ -86,10 +86,10 @@ export default function ProductDetail() {
   }, [productId]);
 
   const handleRent = (product) => {
-    setCartCount(prev => prev + 1);
+    setCartCount((prev) => prev + 1);
     showToast(`${product.productName} sepete eklendi!`);
     const userId = getOwnerIdFromToken();
-    addToCart({ productId: product.id, userId }).catch(err => {
+    addToCart({ productId: product.id, userId }).catch((err) => {
       console.error("Sepete ürün eklenirken bir hata oluştu:", err);
       showToast("Ürün sepette eklenirken bir hata oluştu.");
     });
@@ -123,47 +123,43 @@ export default function ProductDetail() {
     totalRatingSum += c.rating;
   });
 
-  // Seçili dönemin fiyatı (varsayılan olarak ürünün taban fiyatı düşülür)
-  const currentPrice = selectedPeriod && product.rentalPeriodPrices?.[selectedPeriod] 
-    ? product.rentalPeriodPrices[selectedPeriod] 
-    : product.price;
+  // Seçili dönemin fiyatı
+  const currentPrice =
+    selectedPeriod && product.rentalPeriodPrices?.[selectedPeriod]
+      ? product.rentalPeriodPrices[selectedPeriod]
+      : product.price;
 
-  // Kiralama seçenekleri dizisi (12 Ay, 9 Ay, 6 Ay şeklinde büyükten küçüğe sıralı)
+  // Kiralama seçenekleri dizisi
   const availablePeriods = product.rentalPeriodPrices
     ? Object.keys(product.rentalPeriodPrices)
     : [];
 
   const periodLabelsText = availablePeriods
-    .map(p => PERIOD_MAP[p]?.label || p)
+    .map((p) => PERIOD_MAP[p]?.label || p)
     .join(", ");
 
-  // Teknik Özellikler
-  const technicalSpecs = [
-    { key: "Dahili Hafıza", value: "256 GB" },
-    { key: "Kiralama Seçenekleri", value: periodLabelsText || "Aylık" },
-    { key: "Depozito Tutar", value: `${product.depositAmount} ${product.currency}` },
-  ];
+  // ─── DİNAMİK ATTRIBUTES (ÖZELLİKLER) BAĞLAMA ─────────────────
+  const apiAttributes = product.attributes || [];
 
-  const technicalSpecsRight = [
-    { key: "Stok Adedi", value: product.stockQuantity },
-    { key: "Para Birimi", value: product.currency },
-    { key: "Kamera Çözünürlüğü", value: "48 MP" },
-    { key: "Yüz Tanıma", value: "Evet" },
-  ];
+  const allAttributes = [...apiAttributes];
+
+  // Özellikleri iki eşit kolona bölüyoruz
+  const midIndex = Math.ceil(allAttributes.length / 2);
+  const specsLeft = allAttributes.slice(0, midIndex);
+  const specsRight = allAttributes.slice(midIndex);
 
   // Görsel dizisini güvenli bir şekilde alma
-  const productImages = product.images && product.images.length > 0
-    ? product.images.map(img => IMAGE_PREFIX + img.imageUrl)
-    : ["https://via.placeholder.com/512"];
+  const productImages =
+    product.images && product.images.length > 0
+      ? product.images.map((img) => IMAGE_PREFIX + img.imageUrl)
+      : ["https://via.placeholder.com/512"];
 
   return (
     <div>
       <Header categories={[]} wishlistCount={0} cartCount={cartCount} />
       <div className="page">
-
         {/* ── Top card ── */}
         <div className="top-card">
-
           {/* Thumbnail rail */}
           <div className="thumb-rail">
             {productImages.map((src, i) => (
@@ -185,13 +181,26 @@ export default function ProductDetail() {
           {/* Purchase panel */}
           <div className="purchase-panel">
             <div>
-              <div style={{ display: "flex", alignItems: "center", gap: 8, justifyContent: "space-between" }}>
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 8,
+                  justifyContent: "space-between",
+                }}
+              >
                 <div className="product-title">{product.productName}</div>
-                <button style={{ background: "none", border: "none", cursor: "pointer" }} onClick={() => {
-                  setIsWished(!isWished);
-                  addFavourite({ productId: product.id, userId: getOwnerIdFromToken() });
-                }}>
-                  <i className={`fa${isWished ? 's' : 'r'} fa-heart`} style={{ color: isWished ? 'red' : 'gray', fontSize: 20 }} />
+                <button
+                  style={{ background: "none", border: "none", cursor: "pointer" }}
+                  onClick={() => {
+                    setIsWished(!isWished);
+                    addFavourite({ productId: product.id, userId: getOwnerIdFromToken() });
+                  }}
+                >
+                  <i
+                    className={`fa${isWished ? "s" : "r"} fa-heart`}
+                    style={{ color: isWished ? "red" : "gray", fontSize: 20 }}
+                  />
                 </button>
               </div>
               <div className="brand-name">{product.brand}</div>
@@ -237,34 +246,37 @@ export default function ProductDetail() {
             </div>
 
             {/* CTA */}
-            <button className={isRented ? "rent-btn-rented" : "rent-btn"} onClick={() => {
-              if (isRented) {
-                return;
-              }
-              handleRent(product);
-            }}>
+            <button
+              className={isRented ? "rent-btn-rented" : "rent-btn"}
+              onClick={() => {
+                if (isRented) {
+                  return;
+                }
+                handleRent(product);
+              }}
+            >
               {isRented ? "Kiralandı" : "Sepete Ekle"}
             </button>
           </div>
         </div>
 
-        {/* ── Ürün Özellikleri ── */}
+        {/* ── Ürün Özellikleri (Dinamik Attributes) ── */}
         <div className="specs-card">
           <div className="section-title">Ürün Özellikleri</div>
           <div className="specs-grid">
             <div className="specs-col">
-              {technicalSpecs.map((s) => (
-                <div key={s.key} className="spec-row">
-                  <span className="spec-key">{s.key}</span>
-                  <span className="spec-val">{s.value}</span>
+              {specsLeft.map((s, index) => (
+                <div key={s.id || `left-${index}`} className="spec-row">
+                  <span className="spec-key">{s.attributeName}</span>
+                  <span className="spec-val">{s.attributeValue}</span>
                 </div>
               ))}
             </div>
             <div className="specs-col">
-              {technicalSpecsRight.map((s) => (
-                <div key={s.key} className="spec-row">
-                  <span className="spec-key">{s.key}</span>
-                  <span className="spec-val">{s.value}</span>
+              {specsRight.map((s, index) => (
+                <div key={s.id || `right-${index}`} className="spec-row">
+                  <span className="spec-key">{s.attributeName}</span>
+                  <span className="spec-val">{s.attributeValue}</span>
                 </div>
               ))}
             </div>
@@ -344,13 +356,14 @@ export default function ProductDetail() {
                     );
                   })
                 ) : (
-                  <div style={{ padding: "20px 0", color: "#666" }}>Henüz yorum yapılmamış.</div>
+                  <div style={{ padding: "20px 0", color: "#666" }}>
+                    Henüz yorum yapılmamış.
+                  </div>
                 )}
               </div>
             </div>
           </div>
         </div>
-
       </div>
       <Toast msg={toast} />
     </div>

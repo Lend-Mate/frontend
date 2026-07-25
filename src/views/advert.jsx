@@ -28,6 +28,10 @@ export default function Advert() {
   const [stockQuantity, setStockQuantity] = useState("");
   const [availablePeriods, setAvailablePeriods] = useState([]);
   const [depositAmount, setDepositAmount] = useState("");
+  
+  // Dinamik Ürün Özellikleri State'i
+  const [attributes, setAttributes] = useState([]);
+
   const [city, setCity] = useState("");
   const [district, setDistrict] = useState("");
   const [neighborhood, setNeighborhood] = useState("");
@@ -86,6 +90,23 @@ export default function Advert() {
     );
   };
 
+  // Dinamik Özellik İşlemleri
+  const handleAddAttribute = () => {
+    setAttributes((prev) => [...prev, { attributeName: "", attributeValue: "" }]);
+  };
+
+  const handleRemoveAttribute = (index) => {
+    setAttributes((prev) => prev.filter((_, i) => i !== index));
+  };
+
+  const handleAttributeChange = (index, field, value) => {
+    setAttributes((prev) => {
+      const updated = [...prev];
+      updated[index][field] = value;
+      return updated;
+    });
+  };
+
   const isSubmittable =
     termsAccepted &&
     categoryId &&
@@ -110,6 +131,16 @@ export default function Advert() {
         throw new Error("Kullanıcı kimliği token üzerinden alınamadı.");
       }
 
+      // Sadece dolu olan dinamik özellikleri temizle ve payload formatına sok
+      const formattedAttributes = attributes
+        .filter(
+          (attr) => attr.attributeName.trim() !== "" && attr.attributeValue.trim() !== ""
+        )
+        .map((attr) => ({
+          attributeName: attr.attributeName.trim(),
+          attributeValue: attr.attributeValue.trim(),
+        }));
+
       const requestBody = {
         ownerId,
         categoryId: Number(categoryId),
@@ -121,6 +152,7 @@ export default function Advert() {
         stockQuantity: Number(stockQuantity),
         availablePeriods,
         depositAmount: Number(depositAmount),
+        attributes: formattedAttributes, // Dinamik eklenen özellikler
       };
 
       const createdProduct = await createProduct(requestBody);
@@ -307,6 +339,92 @@ export default function Advert() {
                 value={depositAmount}
                 onChange={(e) => setDepositAmount(e.target.value)}
               />
+            </div>
+
+            {/* ── Dynamic Product Attributes Section ── */}
+            <div className="form-group" style={{ marginTop: "24px" }}>
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  marginBottom: "12px",
+                }}
+              >
+                <div className="form-label" style={{ marginBottom: 0 }}>
+                  Ürün Özellikleri (Opsiyonel)
+                </div>
+                <button
+                  type="button"
+                  onClick={handleAddAttribute}
+                  style={{
+                    backgroundColor: "#f3f4f6",
+                    border: "1px solid #d1d5db",
+                    borderRadius: "6px",
+                    padding: "6px 12px",
+                    fontSize: "13px",
+                    fontWeight: "600",
+                    color: "#374151",
+                    cursor: "pointer",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "4px",
+                  }}
+                >
+                  ➕ Özellik Ekle
+                </button>
+              </div>
+
+              {attributes.map((attr, index) => (
+                <div
+                  key={index}
+                  className="form-row"
+                  style={{
+                    marginBottom: "10px",
+                    alignItems: "center",
+                    gap: "10px",
+                  }}
+                >
+                  <div className="form-group" style={{ flex: 1, marginBottom: 0 }}>
+                    <input
+                      className="form-input"
+                      type="text"
+                      placeholder="Özellik Adı (Örn: RAM)"
+                      value={attr.attributeName}
+                      onChange={(e) =>
+                        handleAttributeChange(index, "attributeName", e.target.value)
+                      }
+                    />
+                  </div>
+                  <div className="form-group" style={{ flex: 1, marginBottom: 0 }}>
+                    <input
+                      className="form-input"
+                      type="text"
+                      placeholder="Değeri (Örn: 8 GB)"
+                      value={attr.attributeValue}
+                      onChange={(e) =>
+                        handleAttributeChange(index, "attributeValue", e.target.value)
+                      }
+                    />
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => handleRemoveAttribute(index)}
+                    style={{
+                      backgroundColor: "#fee2e2",
+                      border: "1px solid #fca5a5",
+                      color: "#dc2626",
+                      borderRadius: "6px",
+                      padding: "8px 12px",
+                      cursor: "pointer",
+                      fontSize: "14px",
+                    }}
+                    title="Özelliği Sil"
+                  >
+                    🗑️
+                  </button>
+                </div>
+              ))}
             </div>
           </div>
         </div>
