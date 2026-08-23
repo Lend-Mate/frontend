@@ -1,15 +1,23 @@
 import { getOwnerIdFromToken } from "../services/auth-service"
 import { addFavourite } from "../services/favourite-service"
 
+// Varsayılan Görsel URL'i
+const DEFAULT_IMAGE = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ0hpZej3ruC4MVu8yn9yei4SSJtX4B7rc5VHsTHEd5Aq_tNkI-ffi2oIbx&s=10";
+
 export default function ProductCard({ product, openModal, toggleWish, getImageUrl, isWished, isNew = false }) {
   const quantity = product.stockQuantity;
   const isRented = quantity === 0; // Stok 0 ise kiralanmıştır
   const primaryImage = product.images?.find(img => img.isPrimary) || product.images?.[0]
 
+  // Görsel URL'ini belirle (Eğer primaryImage yoksa direkt varsayılan görseli ver)
+  const imageSrc = primaryImage?.imageUrl 
+    ? getImageUrl(primaryImage.imageUrl) 
+    : DEFAULT_IMAGE;
+
   return (
     <div
       className={`product-card ${isRented ? 'rented' : ''}`}
-      onClick={() => openModal(product)} // Eğer kiralandıysa tıklanıp modal açılmasın
+      onClick={() => openModal(product)}
     >
       {/* RENTED Çapraz Yazı Katmanı */}
       {isRented && (
@@ -24,7 +32,7 @@ export default function ProductCard({ product, openModal, toggleWish, getImageUr
       <button
         type="button"
         className={`product-wish ${isWished ? 'active' : ''}`}
-        disabled={isRented} // Kiralandıysa favoriye ekleme kapatılabilir (isteğe bağlı)
+        disabled={isRented}
         onClick={e => {
           e.stopPropagation()
           toggleWish(product.id)
@@ -39,9 +47,14 @@ export default function ProductCard({ product, openModal, toggleWish, getImageUr
 
       <div className="product-img-wrap">
         <img
-          src={getImageUrl(primaryImage?.imageUrl)}
-          alt={product.productName}
+          src={imageSrc}
+          alt={product.productName || 'Ürün Görseli'}
           loading="lazy"
+          /* Eğer URL geçerli olsa bile yükleme sırasında (404/403 vb.) hata verirse fallback görsele geçer */
+          onError={(e) => {
+            e.target.onerror = null; // Sonsuz döngüyü engeller
+            e.target.src = DEFAULT_IMAGE;
+          }}
         />
       </div>
 
@@ -54,7 +67,6 @@ export default function ProductCard({ product, openModal, toggleWish, getImageUr
           {product.rentalPeriodPrices ? (
             Object.keys(product.rentalPeriodPrices)
             .map((period, index) => {
-              // Örn: "SIX_MONTH" -> 6 Ay, "TWELVE_MONTH" -> 12 Ay
               const periodMap = {
                 ONE_MONTH: '1 Ay',
                 THREE_MONTH: '3 Ay',

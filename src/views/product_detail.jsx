@@ -8,6 +8,9 @@ import { getOwnerIdFromToken } from "../services/auth-service";
 import Toast from "../components/Toast";
 import { addToCart } from "../services/order-service";
 
+// Varsayılan Görsel URL'i
+const DEFAULT_IMAGE = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ0hpZej3ruC4MVu8yn9yei4SSJtX4B7rc5VHsTHEd5Aq_tNkI-ffi2oIbx&s=10";
+
 /* ── Yardımcı Yıldız Bileşeni ──────────────────── */
 function Stars({ rating }) {
   return (
@@ -148,11 +151,14 @@ export default function ProductDetail() {
   const specsLeft = allAttributes.slice(0, midIndex);
   const specsRight = allAttributes.slice(midIndex);
 
-  // Görsel dizisini güvenli bir şekilde alma
+  // Görsel dizisini güvenli bir şekilde alma (Yoksa DEFAULT_IMAGE kullanır)
   const productImages =
     product.images && product.images.length > 0
       ? product.images.map((img) => IMAGE_PREFIX + img.imageUrl)
-      : ["https://via.placeholder.com/512"];
+      : [DEFAULT_IMAGE];
+
+  // Seçili görselin indeks güvenliği
+  const activeImageSrc = productImages[activeImg] || DEFAULT_IMAGE;
 
   return (
     <div>
@@ -168,14 +174,30 @@ export default function ProductDetail() {
                 className={`thumb ${activeImg === i ? "active" : ""}`}
                 onClick={() => setActiveImg(i)}
               >
-                <img src={src} alt={`görsel-${i + 1}`} />
+                <img
+                  src={src}
+                  alt={`görsel-${i + 1}`}
+                  loading="lazy"
+                  onError={(e) => {
+                    e.target.onerror = null;
+                    e.target.src = DEFAULT_IMAGE;
+                  }}
+                />
               </div>
             ))}
           </div>
 
           {/* Main image */}
           <div className="main-image">
-            <img src={productImages[activeImg]} alt={product.productName} />
+            <img
+              src={activeImageSrc}
+              alt={product.productName}
+              loading="lazy"
+              onError={(e) => {
+                e.target.onerror = null;
+                e.target.src = DEFAULT_IMAGE;
+              }}
+            />
           </div>
 
           {/* Purchase panel */}
@@ -299,7 +321,15 @@ export default function ProductDetail() {
               {/* Rating summary */}
               <div className="rating-summary">
                 <div className="rating-product-img">
-                  <img src={productImages[0]} alt={product.productName} />
+                  <img
+                    src={activeImageSrc}
+                    alt={product.productName}
+                    loading="lazy"
+                    onError={(e) => {
+                      e.target.onerror = null;
+                      e.target.src = DEFAULT_IMAGE;
+                    }}
+                  />
                 </div>
 
                 <div className="rating-bars">

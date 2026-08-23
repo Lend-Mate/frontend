@@ -1,8 +1,12 @@
 import { useEffect, useState } from "react";
 
+// Varsayılan Görsel URL'i
+const DEFAULT_IMAGE = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ0hpZej3ruC4MVu8yn9yei4SSJtX4B7rc5VHsTHEd5Aq_tNkI-ffi2oIbx&s=10";
+
 export default function ProductModal({ product, getImageUrl, closeModal, handleRent }) {
   const [selectedImage, setSelectedImage] = useState(null);
   const [isRented, setIsRented] = useState(false);
+
   useEffect(() => {
     if (!product) return;
 
@@ -12,6 +16,9 @@ export default function ProductModal({ product, getImageUrl, closeModal, handleR
   }, [product]);
 
   if (!product) return null;
+
+  // Ana görsel adresini belirle
+  const mainImageSrc = selectedImage ? getImageUrl(selectedImage) : DEFAULT_IMAGE;
 
   return (
     <div className="modal-overlay open" onClick={e => e.target === e.currentTarget && closeModal()}>
@@ -23,8 +30,13 @@ export default function ProductModal({ product, getImageUrl, closeModal, handleR
           <div className="modal-images">
             <img
               className="modal-main-img"
-              src={getImageUrl(selectedImage)}
-              alt={product.productName}
+              src={mainImageSrc}
+              alt={product.productName || 'Ürün Görseli'}
+              loading="lazy"
+              onError={(e) => {
+                e.target.onerror = null; // Sonsuz döngüyü engeller
+                e.target.src = DEFAULT_IMAGE;
+              }}
             />
             {product.images?.length > 1 && (
               <div className="modal-thumbs">
@@ -35,6 +47,10 @@ export default function ProductModal({ product, getImageUrl, closeModal, handleR
                     src={getImageUrl(img.imageUrl)}
                     alt={`thumb-${img.id}`}
                     onClick={() => setSelectedImage(img.imageUrl)}
+                    onError={(e) => {
+                      e.target.onerror = null;
+                      e.target.src = DEFAULT_IMAGE;
+                    }}
                   />
                 ))}
               </div>
