@@ -1,1 +1,1 @@
-export const IMAGE_PREFIX = "https://lend-mate-bucket.s3.us-east-1.amazonaws.com/";
+export const IMAGE_PREFIX = "https://lendmate-budget.s3.eu-north-1.amazonaws.com/";

@@ -8,7 +8,7 @@ import { getOwnerIdFromToken } from "../services/auth-service";
 import Pagination from "../components/Pagination";
 import Toast from "../components/Toast";
 // S3 bucket base URL — kendi bucket adresinle değiştir
-const S3_BASE = "https://lend-mate-bucket.s3.amazonaws.com"
+const S3_BASE = "https://lendmate-budget.s3.eu-north-1.amazonaws.com"
 
 function getImageUrl(key) {
   if (!key) return 'https://placehold.co/400x300?text=Görsel+Yok'

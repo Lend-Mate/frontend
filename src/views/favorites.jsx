@@ -13,7 +13,7 @@ import Toast from "../components/Toast";
 import { addToCart } from "../services/order-service";
 
 // S3 bucket base URL
-const S3_BASE = "https://lend-mate-bucket.s3.amazonaws.com";
+const S3_BASE = "https://lendmate-budget.s3.eu-north-1.amazonaws.com";
 
 function getImageUrl(key) {
   if (!key) return "https://placehold.co/400x300?text=Görsel+Yok";
