@@ -2,6 +2,10 @@
 
 Lendmate, kullanıcıların ürünleri inceleyip filtreleyerek kiralayabildiği, ürün ekleyebildiği ve kiralama süreçlerini yönetebildiği React tabanlı web uygulamasıdır.
 
+<img width="1456" height="763" alt="Ekran Resmi 2026-08-25 22 58 06" src="https://github.com/user-attachments/assets/7e7443ab-7af0-4cbe-8451-b8686e6b17b7" />
+<img width="1456" height="763" alt="Ekran Resmi 2026-08-25 22 58 18" src="https://github.com/user-attachments/assets/0a6f1b63-1af0-4e42-832f-61a9f31ad6da" />
+<img width="1456" height="763" alt="Ekran Resmi 2026-08-25 22 58 59" src="https://github.com/user-attachments/assets/d138b3f9-bf09-4a46-8d27-86f32d8ed273" />
+
 ---
 
 ## İçindekiler
