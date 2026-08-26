@@ -212,7 +212,7 @@ function App() {
         <div className="footer-inner">
           <div className="footer-brand">
             <div className="logo">
-              <span className="logo-icon">+</span>lendmate
+              <span className="logo-icon">+</span>hemenkirala
             </div>
             <p>Türkiye'nin en büyük ürün kiralama platformu.</p>
             <div className="social-links">
