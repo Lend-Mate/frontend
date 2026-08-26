@@ -1,6 +1,6 @@
-# Lendmate Frontend
+# HemenKirala Frontend
 
-Lendmate, kullanıcıların ürünleri inceleyip filtreleyerek kiralayabildiği, ürün ekleyebildiği ve kiralama süreçlerini yönetebildiği React tabanlı web uygulamasıdır.
+HemenKirala, kullanıcıların ürünleri inceleyip filtreleyerek kiralayabildiği, ürün ekleyebildiği ve kiralama süreçlerini yönetebildiği React tabanlı web uygulamasıdır.
 
 ---
 
@@ -16,7 +16,7 @@ Lendmate, kullanıcıların ürünleri inceleyip filtreleyerek kiralayabildiği,
 
 ## Genel Bakış
 
-Uygulama, Lendmate ürün kiralama platformunun kullanıcı arayüzünü sağlar. Giriş yapan kullanıcılar ana sayfada kategorileri ve ürünleri görüntüleyebilir, ürün araması yapabilir, filtreleme ve sıralama uygulayabilir, ürünleri favorilerine veya sepete ekleyebilir. Ayrıca kendi ürünlerini yayınlayabilir, profilini güncelleyebilir ve kiralama/sipariş geçmişini görüntüleyebilir.
+Uygulama, HemenKirala ürün kiralama platformunun kullanıcı arayüzünü sağlar. Giriş yapan kullanıcılar ana sayfada kategorileri ve ürünleri görüntüleyebilir, ürün araması yapabilir, filtreleme ve sıralama uygulayabilir, ürünleri favorilerine veya sepete ekleyebilir. Ayrıca kendi ürünlerini yayınlayabilir, profilini güncelleyebilir ve kiralama/sipariş geçmişini görüntüleyebilir.
 
 ### Temel Özellikler
 
@@ -150,7 +150,7 @@ src/
 
 - Node.js 22 veya uyumlu güncel bir sürüm
 - npm
-- Çalışır durumda Lendmate backend API'si
+- Çalışır durumda HemenKirala backend API'si
 
 API adresi `src/services/api.jsx` içindeki `productApi` ve `userApi` istemcilerinde tanımlıdır. Yerel backend kullanırken bu adresler ilgili local adreslerle değiştirilmelidir.
 

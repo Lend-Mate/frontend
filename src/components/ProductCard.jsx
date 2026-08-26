@@ -59,7 +59,7 @@ export default function ProductCard({ product, openModal, toggleWish, getImageUr
       </div>
 
       <div className="product-info">
-        <div className="product-brand">{product.brand || 'Lendmate'}</div>
+        <div className="product-brand">{product.brand || 'HemenKirala'}</div>
         <div className="product-name">{product.productName}</div>
         <div className="product-specs">{product.description}</div>
 

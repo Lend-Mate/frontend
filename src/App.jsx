@@ -244,7 +244,7 @@ function App() {
           </div>
         </div>
         <div className="footer-bottom">
-          <p>© 2025 Lendmate. Tüm hakları saklıdır.</p>
+          <p>© 2025 HemenKirala. Tüm hakları saklıdır.</p>
         </div>
       </footer>
 

@@ -67,7 +67,7 @@ export default function Header({ categories = [] }) {
       <header className="header">
         <div className="header-inner">
           <a href="/" className="logo">
-            <span className="logo-icon">+</span>lendmate
+            <span className="logo-icon">+</span>hemenkirala
           </a>
 
           <div className="search-bar">

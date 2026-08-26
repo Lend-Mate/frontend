@@ -57,7 +57,7 @@ export default function ProductModal({ product, getImageUrl, closeModal, handleR
             )}
           </div>
           <div className="modal-details">
-            <div className="modal-brand">{product.brand || 'Lendmate'}</div>
+            <div className="modal-brand">{product.brand || 'HemenKirala'}</div>
             <h2 className="modal-title">{product.productName}</h2>
             <div className="modal-specs">{product.description}</div>
 
